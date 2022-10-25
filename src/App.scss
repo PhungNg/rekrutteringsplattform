@@ -1,0 +1,111 @@
+@import './_variables.scss';
+
+.App {
+  max-width: 1440px;
+  margin: auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.candidates {
+  position: relative;
+  margin-top: 2.5rem;
+  padding-top: 0.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border: 1px solid $grayscale-color-200;
+  border-radius: 0.5rem;
+  max-height: 39rem;
+  overflow-y: scroll;
+}
+
+.search-box {
+  position: absolute;
+  display: flex;
+  top: 1.5rem;
+  height: 2rem;
+  width: 15rem;
+  right: 0;
+  padding: 2px 0.5rem;
+  margin-right: 1.5rem;
+  border: 1px solid $grayscale-color-200;
+  border-radius: 4px;
+  align-items: center;
+}
+
+.search-input {
+  all: unset;
+  margin-left: 0.5rem;
+}
+
+.dialog {
+  position: absolute;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.47);
+
+  section {
+    background-color: #FFFFFF;
+    width: 42rem;
+    margin: auto;
+    border: 1px solid $grayscale-color-200 ;
+    border-radius: 4px;
+
+    h1 {
+      color: $primary-color-core;
+    }
+  }
+}
+
+fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  border: none;
+  
+  legend {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $grayscale-color-200;
+    color: $primary-color-core;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input,
+    textarea {
+      min-height: 2.75rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid $grayscale-color-100;
+      border-radius: 0.5rem;
+    }
+    
+    &:last-child {
+      grid-column-start: 1;
+      grid-column-end: 3;
+    }
+  }
+
+}
