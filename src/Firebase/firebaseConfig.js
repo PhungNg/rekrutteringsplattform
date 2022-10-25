@@ -19,11 +19,36 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
 
-export const addUser = async (user) => {
+export const addCandidate = async ({
+  firstname,
+  lastname,
+  phonenumber,
+  mail,
+  company,
+  role,
+  yearsOfExperience,
+  leader,
+  acquaintance,
+  department,
+  status,
+  followUpTime,
+  comments
+}) => {
     try {
         const docRef = await addDoc(collection(db, 'candidates'), {
-            firstname: 'Ole',
-            lastname: 'Lompa'
+          firstname,
+          lastname,
+          phonenumber,
+          mail,
+          company,
+          role,
+          yearsOfExperience,
+          leader,
+          acquaintance,
+          department,
+          status,
+          followUpTime,
+          comments
         })
     } catch (e) {
         console.error("Error adding document: ", e)
