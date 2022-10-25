@@ -3,10 +3,10 @@ import classnames from "classnames";
 
 import './index.scss';
 
-const Button = ({text, amount, selected, callback}) => {
+const Button = ({text, amount, className, callback}) => {
     const btnClasses = classnames(
         "btn",
-        selected ? "selected" : null
+        className ? className : null
     )
 
     const attrs = {
