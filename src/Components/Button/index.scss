@@ -1,0 +1,23 @@
+@import '../../_variables.scss';
+
+.btn {
+    all: unset;
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    margin-right: 0.5rem;
+    max-height: 2rem;
+    border: 1px solid $grayscale-color-200;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    
+    span {
+        margin-left: 0.5rem;
+    }
+
+    &.selected {
+        background-color: $primary-color-400;
+        color: #fff;
+        border: 1px solid $primary-color-200;
+    }
+}
