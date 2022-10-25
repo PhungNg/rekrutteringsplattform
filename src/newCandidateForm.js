@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import {addCandidate} from './Firebase/firebaseConfig'
+import Input from './Components/Input'
 
 const NewCandidateForm = () => {
-    const [ nextForm, setNextForm ] = useState(false)
+    const [ basicInfo, setbasicInfo ] = useState(true)
+    const [ fileName, setFileName ] = useState()
 
     const clicked = (e) => {
         e.preventDefault()
@@ -12,129 +14,54 @@ const NewCandidateForm = () => {
         // addCandidate(formObject)
     }
 
-    const dropHandler = (e) => {
-      // e.preventDefault()
-      console.log(e)
-      console.log(e.dataTransfer)
-      console.log(e.dataTransfer.items)
-    }
+    const BasicInfo = () => (
+      <fieldset form="new-candidate" className="basic-info">
+        <Input id="firstname" placeholder="Ola" label="Fornavn"/>
+        <Input id="lastname" placeholder="Nordmann" label="Etternavn"/>
+        <Input id="phonenumber" placeholder="222 52 522" label="Telefonnummer"/>
+        <Input id="mail" placeholder="mail@mail.com" label="Mail"/>
+        <Input id="company" placeholder="Aboveit" label="Firma / Skole"/>
+        <Input id="role" placeholder="UX Designer" label="Stilling"/>
+        <Input id="yearsOfExperience" placeholder="7" label="Års erfaring"/>
+        <Input id="leader" placeholder="Ansvarlig leder for oppfølging" label="Ansvarlig"/>
+        <Input id="acquaintance" placeholder="Bekjentskap i Aboveit" label="bekjentskap"/>
+        <Input id="department" type="select" label="Avdeling">
+          <option value="Arkitektur">Arkitektur</option>
+          <option value="Experience">Experience</option>
+          <option value="Test of prosjekt">Test of prosjekt</option>
+          <option value="Utvikling">Utvikling</option>
+        </Input>
+        <Input type="select" id="status" label="Status">
+          <option value="Ikke kontaktet">Ikke kontaktet</option>
+          <option value="Kontaktet">Kontaktet</option>
+          <option value="Til 1. intervju">Til 1. intervju</option>
+          <option value="Til 2. intervju">Til 2. intervju</option>
+          <option value="Tilbud sendt">Tilbud sendt</option>
+          <option value="Tilbud godtatt">Tilbud godtatt</option>
+          <option value="Ikke aktuell">Ikke aktuell</option>
+        </Input>
+        <Input id="followUpTime" type="date" label="Oppfølgings tid"/>
+        <Input id="comments" textarea rows={4} placeholder="Litt om kandidaten" label="Kommentar" />
+      </fieldset>
+    )
+    
+    const FileUpload = () => (
+      <fieldset form="new-candidate" className="file-upload">
+        <Input type="file" id="cv" label="Last opp CV"/>
+        <Input type="file" id="grades" label="Last opp karakterutskrift studie"/>
+        <Input type="file" id="gradesVgs" label="Last opp karakterutskrift VGS"/>
+      </fieldset>
+    )
 
     return (
         <form id="new-candidate" onSubmit={clicked}>
-          { !nextForm
-              ? <fieldset form="new-candidate" className="basic-info">
-                  <div className="input-container">
-                    <label htmlFor="firstname">Fornavn</label>
-                    <input id="firstname" type="text" placeholder="Ola" name="firstname"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="lastname">Etternavn</label>
-                    <input id="lastname" type="text" placeholder="Nordmann" name="lastname"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="phonenumber">Telefonnummer</label>
-                    <input id="phonenumber" type="text" placeholder="222 52 522" name="phonenumber"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="mail">Mail</label>
-                    <input id="mail" type="text" placeholder="mail@mail.no" name="mail"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="company">Firma / Skole</label>
-                    <input id="company" type="text" placeholder="Aboveit" name="company"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="role">Stilling</label>
-                    <input id="role" type="text" placeholder="UX designer" name="role"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="experience">Års erfaring</label>
-                    <input id="experience" type="text" placeholder="7" name="yearsOfExperience"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="leader">Ansvarlig</label>
-                    <input id="leader" type="text" placeholder="Ansvarlig leder for oppfølging" name="leader"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="acquaintance">Bekjentskap</label>
-                    <input id="acquaintance" type="text" placeholder="Bekjentskap i Aboveit" name="acquaintance"/>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="department">Avdeling</label>
-                    <div className="select-container">
-                      <select name="department" id="department">
-                        <option value="Arkitektur">Arkitektur</option>
-                        <option value="Experience">Experience</option>
-                        <option value="Test of prosjekt">Test of prosjekt</option>
-                        <option value="Utvikling">Utvikling</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div className="input-container">
-                    <label htmlFor="status">Status</label>
-                    <div className="select-container">
-                      <select name="status" id="status">
-                        <option value="Ikke kontaktet">Ikke kontaktet</option>
-                        <option value="Kontaktet">Kontaktet</option>
-                        <option value="Til 1. intervju">Til 1. intervju</option>
-                        <option value="Til 2. intervju">Til 2. intervju</option>
-                        <option value="Tilbud sendt">Tilbud sendt</option>
-                        <option value="Tilbud godtatt">Tilbud godtatt</option>
-                        <option value="Ikke aktuell">Ikke aktuell</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="input-container">
-                    <label htmlFor="follow-up">Oppfølgings tid</label>
-                    <input id="follow-up" type="date" name="followUpTime"/>
-                  </div>
-                  <div className="input-container">
-                    <label htmlFor="comments">Kommentar</label>
-                    <textarea id="comments" rows="4" placeholder="Litt om kandidaten..." name="comments"></textarea>
-                  </div>
-                </fieldset>
-                : <fieldset form="new-candidate" className="file-upload">
-                    <div class="input-container">
-                      <label htmlFor="cv">Last opp CV</label>
-                      <div className="drop-zone">
-                        <span>Dra og slipp filen her</span>
-                        <input onDrop={(e)=>dropHandler()} id="cv" type="file" name="cv" />
-                        <span>Eller, klikk for å bla igjennom filer</span>
-                      </div>
-                    </div>
-                    <div class="input-container">
-                      <label htmlFor="grades">Last opp karakterutskrift studie</label>
-                      <div className="drop-zone">
-                        <span>Dra og slipp filen her</span>
-                        <input onDrop={(e)=>dropHandler()} id="grades" type="file" name="grades" />
-                        <span>Eller, klikk for å bla igjennom filer</span>
-                      </div>
-                    </div>
-                    <div class="input-container">
-                      <label htmlFor="gradesVgs">Last opp karakterutskrift VGS</label>
-                      <div className="drop-zone">
-                        <span>Dra og slipp filen her</span>
-                        <h1>Dra og slipp filen her</h1>
-                        <input onDrop={(e)=>dropHandler()} id="gradesVgs" type="file" name="gradesVgs" />
-                        <span>Eller, klikk for å bla igjennom filer</span>
-                      </div>
-                    </div>
-                  </fieldset>
-            }
+          { basicInfo
+              ? <BasicInfo />
+              : <FileUpload />
+          }
             <div className="button-container">
-              {nextForm && <button className="btn" onClick={()=> setNextForm(!nextForm)}>Forrige</button>}
-              <button className="btn pc-400" form="new-candidate" onClick={()=> setNextForm(!nextForm)}>Neste</button>
+              {basicInfo && <button className="btn" onClick={()=> setbasicInfo(!basicInfo)}>Forrige</button>}
+              <button className="btn pc-400" form="new-candidate" onClick={()=> setbasicInfo(!basicInfo)}>Neste</button>
             </div>
         </form>
     )
