@@ -32,7 +32,10 @@ export const addCandidate = async ({
   department,
   status,
   followUpTime,
-  comments
+  comments,
+  cv,
+  grades,
+  gradesVgs
 }) => {
     try {
         const docRef = await addDoc(collection(db, 'candidates'), {
@@ -48,7 +51,10 @@ export const addCandidate = async ({
           department,
           status,
           followUpTime,
-          comments
+          comments,
+          cv,
+          grades,
+          gradesVgs
         })
     } catch (e) {
         console.error("Error adding document: ", e)
