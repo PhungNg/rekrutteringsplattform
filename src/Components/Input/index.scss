@@ -20,11 +20,6 @@
         border-radius: 0.5rem;
     }
     
-    &:last-child {
-        grid-column-start: 1;
-        grid-column-end: 3;
-    }
-    
     .select-container {
         padding-right: 0.75rem;
       
@@ -42,35 +37,62 @@
         min-height: 7.5rem;
         margin-top: 0.5rem;
         margin-bottom: 1rem;
-        padding: 0.5rem;
         background-color: $grayscale-color-200;
-        border: 1px solid $grayscale-color-100;
+        border: 2px solid transparent;
         border-radius: 4px;
         
-        &:hover {
-            // background-color: red;
+        &.active {
+            border: 2px dotted green;
+            background-color: $grayscale-color-100;
         }
+        
+        input[type=file] {
+            position: absolute;
+            //   opacity: 0;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            margin: 0;
+            cursor: pointer;
 
-        span {
-            margin: auto;
+            &:valid {
+                + .upload-text-wrapper {
+                    background-color: $success-color-2;
+                    
+                    .success {
+                        display: block;
+                    }
+    
+                    .default {
+                        display: none;
+                    }
+                }
+
+            }
         }
         
         .upload-text-wrapper {
             display: flex;
             flex-direction: column;
+            width: 100%;
+            min-height: 7.5rem;
+            justify-content: center;
 
-            &.hidden {
+            .default {
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .success {
                 display: none;
+                text-align: center;
             }
         }
 
-        input {
-          position: absolute;
-          opacity: 0;
-          height: 100%;
-          top: 0;
-          left: 0;
-          margin: 0;
-        }
+       
     }
 }  

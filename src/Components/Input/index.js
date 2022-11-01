@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
-import classNames from 'classnames';
+import React, { useState, useRef, useEffect } from 'react'
+import upload from '../../Icons/upload.png'
 
 import './index.scss';
 
 const Input = ({type, id, name, placeholder, label, textarea, rows, children}) => {
     const [ fileName, setFileName ] = useState()
-    const [ drag, setDrag] = useState()
+    const [ fileUpload, setFileUpload] = useState()
 
     const attrs = {
         type: type ? type : "text",
@@ -15,41 +15,45 @@ const Input = ({type, id, name, placeholder, label, textarea, rows, children}) =
         rows
     }
 
-    const textWrapperRef = useRef(null);
+    const uploadContainer = useRef(null);
 
     const dropHandler = (e) => {
-        // e.preventDefault()
         const dt = e.dataTransfer
         const files = dt.files
-  
-        console.log(dt)
-        console.log(files[0].name)
-        setFileName(fileName => fileName = files[0].name)
     }
 
-    const dragEnterHandler = (e) => {
-        textWrapperRef.current.classList.add("hidden");
+    const dragEnterHandler = () => {
+        uploadContainer.current.classList.add("active");
     }
     
-    const dragLeaveHandler = (e) => {
-        textWrapperRef.current.classList.remove("hidden");
+    const dragLeaveHandler = () => {
+        uploadContainer.current.classList.remove("active");
     }
+
+    useEffect(()=>{
+        if(fileUpload)console.log(fileUpload)
+    },[fileUpload])
 
     const FileTemplate = () => {
 
         return (
-            <div className="upload-container">
-                <input {...attrs}
-                onDragEnter={(e) => dragEnterHandler(e)}
-                onDragLeave={(e) => dragLeaveHandler(e)}
-                onDrop={(e) => dropHandler(e)}/>
-                <div ref={textWrapperRef} className={`upload-text-wrapper${fileName ? " hidden" : ""}`}>
-                    <span className="upload-icon">Ikon</span>
-                    <span className="upload-title">Dra og slipp filen her</span>
-                    <span className="upload-subtitle">Eller, klikk for å bla igjennom filer</span>
-                </div>
-                <div className={`file-loaded${fileName ? " active" : ""}`}>
-                    <span>{fileName}</span>
+            <div ref={uploadContainer} className="upload-container">
+                <input {...attrs} required
+                    onDragEnter = {()=> dragEnterHandler()}
+                    // onDrop={(e)=> dropHandler(e)}
+                    onDragLeave = {()=> dragLeaveHandler()}
+                    // onChange = {(e) => setFileUpload(e.target.files[0])}
+                />
+                <div className="upload-text-wrapper">
+                    <span className="default">
+                        {/* <span className="upload-icon">{upload}</span> */}
+                        <span>
+                            <img src={upload} alt="upload-icon" />
+                        </span>
+                        <span className="upload-title">Dra og slipp filen her</span>
+                        <span className="upload-subtitle">Eller, klikk for å bla igjennom filer</span>
+                    </span>
+                    <span className="success">Success</span>
                 </div>
             </div>
         )
