@@ -1,0 +1,127 @@
+@import "../../variables";
+
+.accordion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 4.5rem;
+    padding: 0.5rem;
+    padding-left: 3.5rem;
+    margin-bottom: 0.5rem;
+    align-items: center;
+    background-color: $grayscale-color-50;
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    .accordion-header {
+        all: unset;
+        width: 100%;
+
+        span {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        small {
+            margin-right: 1rem;
+        }
+
+        div {
+            margin-top: 0.5rem;
+        }
+
+        img {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.25rem;
+        }
+    }
+
+    &.title-only {
+        .accordion-header {
+            margin-top: 1rem;
+        }
+        .accordion-body {
+            padding: 0;
+            background-color: $grayscale-color-50;
+            border: none;
+        }
+    }
+
+    .accordion-body {
+        display: none;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        padding: 1rem;
+        padding-bottom: 0;
+        background-color: #ffffff;
+        border: 1px solid $grayscale-color-300;
+        border-radius: 4px;
+
+        span {
+            font-size: 1.125rem;
+            font-weight: bold;
+        }
+
+        form {
+            width: 100%;
+
+            fieldset {
+                border: none;
+                padding: 0;
+
+                > div:first-child {
+                    display: grid;
+                    gap: 0.5rem;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    margin: 1rem 0;
+                }
+
+                .btn {
+                    margin-top: 1rem;
+                }                
+            }
+        }
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        width: 3.5rem;
+        min-height: 4.5rem;
+        top: 0;
+        left: 0;
+        background-image: url(../../Icons/accordion-down.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 30%;
+    }
+
+    &.active {
+        &:before {
+            background-image: url(../../Icons/accordion-up.png);
+        }
+
+        .accordion-body {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+    }
+
+    &.add {
+        &:before {
+            background-image: url(../../Icons/plus-black.png);
+            transition: transform 0.5s;
+
+        }
+        
+        &.active {
+            &:before {
+                transform: rotate(45deg);
+                transition: transform 0.5s;
+            }
+        }
+    }
+}
