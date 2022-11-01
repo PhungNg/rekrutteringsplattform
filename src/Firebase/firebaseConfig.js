@@ -1,6 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { addDoc, getDocs, collection, getFirestore } from "firebase/firestore";
+import { doc, addDoc, getDocs, getDoc, updateDoc, arrayUnion, collection, getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,6 +18,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app)
+
 export const db = getFirestore(app);
 
 
@@ -32,10 +36,7 @@ export const addCandidate = async ({
   department,
   status,
   followUpTime,
-  comments,
-  cv,
-  grades,
-  gradesVgs
+  comments
 }) => {
     try {
         const docRef = await addDoc(collection(db, 'candidates'), {
@@ -51,21 +52,34 @@ export const addCandidate = async ({
           department,
           status,
           followUpTime,
-          comments,
-          cv,
-          grades,
-          gradesVgs
+          comments
         })
     } catch (e) {
         console.error("Error adding document: ", e)
     }
 }
 
+export const addDialog = async (id, dialog) => {
+  await updateDoc(doc(db, "candidates", id), {
+    dialogs: arrayUnion(dialog)
+  })
+}
+
+export const getCandidate = async id => {
+  // const docRef = doc(db, "candidates", id)
+  const response = await getDoc(doc(db, "candidates", id))
+  return response.data()
+}
+
 export const getCandidates = async () => {
-    const querySnapshot = await getDocs(collection(db, 'candidates'));
-    let candidates = []
-    querySnapshot.forEach(doc => {
-        candidates.push(doc.data())
-    })
-    return candidates
-  }
+  const querySnapshot = await getDocs(collection(db, 'candidates'));
+  let candidates = []
+
+  querySnapshot.forEach(doc => {
+    let data = doc.data()
+    data.id = doc.id
+    candidates.push(data)
+  })
+
+  return candidates
+}
