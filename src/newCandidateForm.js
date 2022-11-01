@@ -1,18 +1,42 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {addCandidate} from './Firebase/firebaseConfig'
+import { storage } from './Firebase/firebaseConfig'
+import { ref, uploadBytes } from 'firebase/storage'
 import Input from './Components/Input'
 
 const NewCandidateForm = () => {
-    const [ basicInfo, setbasicInfo ] = useState(true)
-    const [ fileName, setFileName ] = useState()
+    const [ firstStep, setFirstStep ] = useState(true)
+    const [ formObject, setFormObject ] = useState()
+    const [ filesUpload, setFilesUpload ] = useState()
+    const [ formComplete, setFormComplete ] = useState(false)
 
-    const clicked = (e) => {
-        e.preventDefault()
-        let data = new FormData(e.target);
-        let formObject = Object.fromEntries(data.entries())
-        console.log(formObject)
-        // addCandidate(formObject)
+    const formRef = useRef(null)
+
+    const addNewUser = () => {
+      addCandidate(formObject)
+      uploadFiles()
     }
+    
+    const uploadFiles = () => {
+      for(let file in filesUpload) {
+        const filesRef = ref(storage, `${formObject.firstname}`)
+
+        uploadBytes(filesRef, uploadFiles)
+      }
+    }
+
+    const formHandler = (e) => {
+        e.preventDefault()
+        let data = new FormData(formRef.current);
+        
+        if(firstStep){
+          setFormObject(Object.fromEntries(data.entries()))
+          setFirstStep(!firstStep)
+        } else {
+          setFilesUpload(Object.fromEntries(data.entries()))
+          setFormComplete(true)
+        }
+      }
 
     const BasicInfo = () => (
       <fieldset form="new-candidate" className="basic-info">
@@ -24,7 +48,7 @@ const NewCandidateForm = () => {
         <Input id="role" placeholder="UX Designer" label="Stilling"/>
         <Input id="yearsOfExperience" placeholder="7" label="Års erfaring"/>
         <Input id="leader" placeholder="Ansvarlig leder for oppfølging" label="Ansvarlig"/>
-        <Input id="acquaintance" placeholder="Bekjentskap i Aboveit" label="bekjentskap"/>
+        <Input id="acquaintance" placeholder="Bekjentskap i Aboveit" label="Bekjentskap"/>
         <Input id="department" type="select" label="Avdeling">
           <option value="Arkitektur">Arkitektur</option>
           <option value="Experience">Experience</option>
@@ -44,25 +68,33 @@ const NewCandidateForm = () => {
         <Input id="comments" textarea rows={4} placeholder="Litt om kandidaten" label="Kommentar" />
       </fieldset>
     )
-    
-    const FileUpload = () => (
-      <fieldset form="new-candidate" className="file-upload">
-        <Input type="file" id="cv" label="Last opp CV"/>
-        <Input type="file" id="grades" label="Last opp karakterutskrift studie"/>
-        <Input type="file" id="gradesVgs" label="Last opp karakterutskrift VGS"/>
-      </fieldset>
-    )
+
+    const FileUpload = () => {
+      return (
+        <fieldset form="new-candidate" className="file-upload">
+          <Input type="file" id="cv" label="Last opp CV"/>
+          <Input type="file" id="grades" label="Last opp karakterutskrift studie"/>
+          <Input type="file" id="gradesVgs" label="Last opp karakterutskrift VGS"/>
+        </fieldset>
+      )
+    }
+
+    useEffect(() => {
+      if(formComplete && filesUpload) {
+        addNewUser()
+      }
+    })
 
     return (
-        <form id="new-candidate" onSubmit={clicked}>
-          { basicInfo
+        <form id="new-candidate" ref={formRef}>
+          { firstStep
               ? <BasicInfo />
               : <FileUpload />
           }
-            <div className="button-container">
-              {basicInfo && <button className="btn" onClick={()=> setbasicInfo(!basicInfo)}>Forrige</button>}
-              <button className="btn pc-400" form="new-candidate" onClick={()=> setbasicInfo(!basicInfo)}>Neste</button>
-            </div>
+          <div className="button-container">
+            {!firstStep && <button className="btn" onClick={()=> setFirstStep(!firstStep)}>Forrige</button>}
+            <button className="btn pc-400" form="new-candidate" onClick={(e)=> formHandler(e)}>{formObject ? "Lagre" : "Neste"}</button>
+          </div>
         </form>
     )
 }
