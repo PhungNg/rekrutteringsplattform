@@ -2,15 +2,38 @@
 
 .btn {
     all: unset;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     padding: 0.5rem 1rem;
     margin-right: 0.5rem;
     max-height: 2rem;
     border: 1px solid $grayscale-color-200;
     border-radius: 0.5rem;
-    cursor: pointer;
     font-weight: bold;
-    
+    cursor: pointer;
+
+    &.btn-icon {
+        border-color: transparent;
+        justify-content: center;
+        padding: 0.25rem;
+        height: 1.5rem;
+        width: 1.5rem;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        &:hover {
+            background-color: $grayscale-color-100;
+        }
+        
+        &:active {
+            background-color: transparent;
+            border-color: $grayscale-color-200;
+        }
+    }
+
     span {
         margin-left: 0.5rem;
     }

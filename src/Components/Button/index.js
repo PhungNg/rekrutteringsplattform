@@ -3,19 +3,21 @@ import classnames from "classnames";
 
 import './index.scss';
 
-const Button = ({text, amount, className, callback}) => {
+const Button = ({text, amount, className, icon, onClick}) => {
     const btnClasses = classnames(
         "btn",
-        className ? className : null
+        className ? className : null,
+        icon ? "icon" : null
     )
 
     const attrs = {
-        onClick: callback || null
+        onClick: onClick || null
     }
 
     return (
         <button {...attrs} className={btnClasses}>
-            { text }
+            { text && text }
+            { icon && <img src={icon} className="icon" alt=""/> }
             { amount && <span>{amount}</span>}
         </button>
     )
