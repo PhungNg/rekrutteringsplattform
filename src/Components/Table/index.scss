@@ -23,6 +23,7 @@
         tr {
             border: 4px solid transparent;
             border-left: 0;
+            cursor: pointer;
 
             td {
                 > div {
@@ -62,7 +63,7 @@
                 }
             }
             
-            &.not-applicable {
+            &.error {
                 td {
                     > div {
                         border-color: $error-color-1;

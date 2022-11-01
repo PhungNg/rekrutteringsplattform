@@ -1,15 +1,61 @@
 import React from "react";
-import classnames from "classnames";
 
 import './index.scss';
 
-const Table = ({headers}) => {
-    const tableClasses = classnames(
-        "table"
+const Table = ({candidates, onClick}) => {
+    const headers = ["Navn", "Stilling", "Oppfølging", "Ansvarlig", "Telefon", "Status"]
+
+    const setStatusClass = (status) => {
+        let className;
+
+        switch(status) {
+            case "Tilbud godtatt":
+                className = "accepted"
+                break;
+            case "Ikke aktuell":
+                className = "error"
+                break;
+            case "Ikke kontaktet":
+                break;
+            default:
+                className = "waiting"
+                break;
+        }
+        
+        return className
+    }
+
+    const Tbody = () => (
+        <tbody>
+            {candidates.map((candidate) => (
+                <tr key={candidate.firstname + candidate.lastname}
+                    className={setStatusClass(candidate.status)}
+                    onClick={()=>onClick(candidate)}>
+                    <td>
+                        <div>{candidate.firstname} {candidate.lastname}</div>
+                    </td>
+                    <td>
+                        <div>{candidate.role}</div>
+                    </td>
+                    <td>
+                        <div>{candidate.followUpTime}</div>
+                    </td>
+                    <td>
+                        <div>{candidate.leader}</div>
+                    </td>
+                    <td>
+                        <div>{candidate.phonenumber}</div>
+                    </td>
+                    <td>
+                        <div>{candidate.status}</div>
+                    </td>
+                </tr>
+            ))}
+        </tbody>
     )
 
     return (
-        <table className={tableClasses}>
+        <table className="table">
             <caption>
                 <h2>Alle kandidater</h2>
             </caption>
@@ -20,88 +66,7 @@ const Table = ({headers}) => {
                     )}
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div>Ola Lompe</div>
-                    </td>
-                    <td>
-                        <div>Heltid</div>
-                    </td>
-                    <td>
-                        <div>12.10.2022, kl 13:00</div>
-                    </td>
-                    <td>
-                        <div>Cathrine Donberg</div>
-                    </td>
-                    <td>
-                        <div>222 52 522</div>
-                    </td>
-                    <td>
-                        <div>Ikke kontaktet</div>
-                    </td>
-                </tr>
-                <tr className="waiting">
-                    <td>
-                        <div>Ola Lompe</div>
-                    </td>
-                    <td>
-                        <div>Heltid</div>
-                    </td>
-                    <td>
-                        <div>12.10.2022, kl 13:00</div>
-                    </td>
-                    <td>
-                        <div>Cathrine Donberg</div>
-                    </td>
-                    <td>
-                        <div>222 52 522</div>
-                    </td>
-                    <td>
-                        <div>Tilbud sendt</div>
-                    </td>
-                </tr>
-                <tr className="not-applicable">
-                    <td>
-                        <div>Ola Lompe</div>
-                    </td>
-                    <td>
-                        <div>Heltid</div>
-                    </td>
-                    <td>
-                        <div>12.10.2022, kl 13:00</div>
-                    </td>
-                    <td>
-                        <div>Cathrine Donberg</div>
-                    </td>
-                    <td>
-                        <div>222 52 522</div>
-                    </td>
-                    <td>
-                        <div>Ikke aktuell</div>
-                    </td>
-                </tr>
-                <tr className="accepted">
-                    <td>
-                        <div>Ola Lompe</div>
-                    </td>
-                    <td>
-                        <div>Heltid</div>
-                    </td>
-                    <td>
-                        <div>12.10.2022, kl 13:00</div>
-                    </td>
-                    <td>
-                        <div>Cathrine Donberg</div>
-                    </td>
-                    <td>
-                        <div>222 52 522</div>
-                    </td>
-                    <td>
-                        <div>Tilbud godtatt</div>
-                    </td>
-                </tr>
-            </tbody>
+            <Tbody />
         </table>
     )
 }
