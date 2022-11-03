@@ -25,6 +25,7 @@ export const db = getFirestore(app);
 
 export const addCandidate = async ({
   firstname,
+  files,
   lastname,
   phonenumber,
   mail,
@@ -40,6 +41,7 @@ export const addCandidate = async ({
 }) => {
     try {
         const docRef = await addDoc(collection(db, 'candidates'), {
+          files,
           firstname,
           lastname,
           phonenumber,

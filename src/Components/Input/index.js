@@ -4,9 +4,6 @@ import upload from '../../Icons/upload.png'
 import './index.scss';
 
 const Input = ({type, id, name, placeholder, label, textarea, rows, children}) => {
-    const [ fileName, setFileName ] = useState()
-    const [ fileUpload, setFileUpload] = useState()
-
     const attrs = {
         type: type ? type : "text",
         id,
@@ -17,43 +14,47 @@ const Input = ({type, id, name, placeholder, label, textarea, rows, children}) =
 
     const uploadContainer = useRef(null);
 
-    const dropHandler = (e) => {
-        const dt = e.dataTransfer
-        const files = dt.files
-    }
-
-    const dragEnterHandler = () => {
-        uploadContainer.current.classList.add("active");
-    }
     
-    const dragLeaveHandler = () => {
-        uploadContainer.current.classList.remove("active");
-    }
-
-    useEffect(()=>{
-        if(fileUpload)console.log(fileUpload)
-    },[fileUpload])
-
     const FileTemplate = () => {
+        const [fileName, setFileName] = useState()
+
+        const dropHandler = (e) => {
+            const dt = e.dataTransfer
+            const files = dt.files
+            setFileName(files[0].name)
+        }
+        
+        const changeHandler = (e) => {
+            setFileName(e.target.value.split('\\').pop())
+        }
+    
+        const dragEnterHandler = () => {
+            uploadContainer.current.classList.add("active")
+        }
+        
+        const dragLeaveHandler = () => {
+            uploadContainer.current.classList.remove("active")
+        }
 
         return (
             <div ref={uploadContainer} className="upload-container">
                 <input {...attrs} required
                     onDragEnter = {()=> dragEnterHandler()}
-                    // onDrop={(e)=> dropHandler(e)}
+                    onDrop={(e)=> dropHandler(e)}
+                    onChange={(e)=> changeHandler(e)}
                     onDragLeave = {()=> dragLeaveHandler()}
-                    // onChange = {(e) => setFileUpload(e.target.files[0])}
                 />
-                <div className="upload-text-wrapper">
-                    <span className="default">
-                        {/* <span className="upload-icon">{upload}</span> */}
-                        <span>
-                            <img src={upload} alt="upload-icon" />
-                        </span>
-                        <span className="upload-title">Dra og slipp filen her</span>
-                        <span className="upload-subtitle">Eller, klikk for å bla igjennom filer</span>
-                    </span>
-                    <span className="success">Success</span>
+                <div className="upload-text-container">
+                    {fileName
+                        ? <span className="filename">{fileName}</span>
+                        : <>
+                            <span>
+                                <img src={upload} alt="upload-icon" />
+                            </span>
+                            <span className="upload-title">Dra og slipp filen her</span>
+                            <span className="upload-subtitle">Eller, klikk for å bla igjennom filer</span>
+                        </>
+                    }
                 </div>
             </div>
         )
