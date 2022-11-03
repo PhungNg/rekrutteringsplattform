@@ -5,7 +5,7 @@ import {
     chain,
     clock,
     edit,
-    file,
+    file as fileIcon,
     flag,
     home,
     key,
@@ -27,6 +27,7 @@ const CandidateProfile = ({candidate}) => {
         comments, 
         company, 
         department, 
+        files, 
         followUpTime, 
         leader, 
         id,
@@ -136,53 +137,45 @@ const CandidateProfile = ({candidate}) => {
         )
     }
 
+    const documentName = (string) => {
+        let docName;
+        switch(string) {
+            case "cv":
+                docName = "CV"
+                break;
+            case "grades":
+                docName = "Karakterutskrift"
+                break;
+            case "gradesVgs":
+                docName = "Karakterutskrift Vgs"
+                break;
+            default:
+                docName = "Søknadstekst"
+                break;
+        }
+        return docName;
+    }
+
     const Documents = () => (
         <div className="documents">
-            <div>
-                <div>
-                    <img src={file} className="icon" alt="" />
-                    <p>Søknad</p>
+            {files
+                ? files.map((file, i) => (
+                <div key={i}>
+                    {Object.keys(file).map((key, i) => (
+                        <React.Fragment key={i}>
+                            <div>
+                                <img src={fileIcon} className="icon" alt="" />
+                                <p>{documentName(key)}</p>
+                            </div>
+                            <a href={file[key].url}>{file[key].fileName}</a>
+                        </React.Fragment>
+                    ))}
+                    <div>
+                        <Button className={"btn-icon"} icon={edit}/>
+                        <Button className={"btn-icon"} icon={bin}/>
+                    </div>
                 </div>
-                <a href="">Filnavn</a>
-                <div>
-                    <Button className={"btn-icon"} icon={edit}/>
-                    <Button className={"btn-icon"} icon={bin}/>
-                </div>
-            </div>
-            <div>
-                <div>
-                    <img src={file} className="icon" alt="" />
-                    <p>CV</p>
-                </div>
-                <a href="">Filnavn</a>
-                <div>
-                    <Button className={"btn-icon"} icon={edit}/>
-                    <Button className={"btn-icon"} icon={bin}/>
-                </div>
-            </div>
-            <div>
-                <div>
-
-                    <img src={file} className="icon" alt="" />
-                    <p>Karakterutskrift studie</p>
-                </div>
-                <a href="">Filnavn</a>
-                <div>
-                    <Button className={"btn-icon"} icon={edit}/>
-                    <Button className={"btn-icon"} icon={bin}/>
-                </div>
-            </div>
-            <div>
-                <div>
-                    <img src={file} className="icon" alt="" />
-                    <p>Karakterutskrift VGS</p>
-                </div>
-                <a href="">Filnavn</a>
-                <div>
-                    <Button className={"btn-icon"} icon={edit}/>
-                    <Button className={"btn-icon"} icon={bin}/>
-                </div>
-            </div>
+            )): <h3>Ingen dokumenter</h3>}
         </div>
     )
     
@@ -207,9 +200,9 @@ const CandidateProfile = ({candidate}) => {
             <form id="new-dialog" ref={formRef}>
                 <fieldset>
                     <div>
-                        <Input id="title" label="Tittel" placeholder="Teknisk intervju"/>
-                        <Input type="date" id="date" label="Dato" placeholder="20.09.2022"/>
-                        <Input id="place" label="Sted"/>
+                        <Input id="title" label="Tittel" placeholder="Teknisk intervju" required />
+                        <Input type="date" id="date" label="Dato" placeholder="20.09.2022" required />
+                        <Input id="place" label="Sted" required />
                     </div>
                     <Input textarea id="summary" label="Sammendrag" placeholder="Enter a description" rows={4}/>
                     <Button className="pc-400" text="Lagre" onClick={(e) => addNewDialog(e)}/>
