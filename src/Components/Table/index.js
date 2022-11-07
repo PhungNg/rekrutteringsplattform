@@ -30,7 +30,7 @@ const Table = ({candidates, onClick}) => {
             {candidates.map((candidate) => (
                 <tr key={candidate.firstname + candidate.lastname}
                     className={setStatusClass(candidate.status)}
-                    onClick={()=>onClick(candidate)}>
+                    onClick={()=>onClick("profile", candidate)}>
                     <td>
                         <div>{candidate.firstname} {candidate.lastname}</div>
                     </td>
