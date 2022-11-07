@@ -2,6 +2,7 @@ import accordionDown from './accordion-down.png'
 import accordionUp from './accordion-up.png'
 import bin from './bin.png'
 import calendar from './calendar.png'
+import cancel from './cancel.png'
 import chain from './chain.png'
 import clock from './clock.png'
 import edit from './edit.png'
@@ -15,6 +16,7 @@ import phone from './phone.png'
 import plus from './plus.png'
 import plusBlack from './plus-black.png'
 import profile from './profile.png'
+import profileCheck from './profile-check.png'
 import rocket from './rocket.png'
 import upload from './upload.png'
 
@@ -23,6 +25,7 @@ export {
     accordionUp,
     bin,
     calendar,
+    cancel,
     chain,
     clock,
     edit,
@@ -36,6 +39,7 @@ export {
     plus,
     plusBlack,
     profile,
+    profileCheck,
     rocket,
     upload
 }
