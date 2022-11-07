@@ -1,0 +1,46 @@
+@import '../../_variables.scss';
+
+.dialog {
+    position: absolute;
+    display: none;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.47);
+
+    &.is-open {
+      display: flex;
+    }
+
+    > section {
+      margin-top: 7rem;
+      padding: 1rem;
+      background-color: #FFFFFF;
+      border: 1px solid $grayscale-color-200 ;
+      border-radius: 0.5rem;
+      height: fit-content;
+    }
+
+    .dialog-header {
+      border-bottom: 1px solid $grayscale-color-200;
+      color: $primary-color-core;
+      margin-bottom: 1.5rem;
+
+      h1 {
+        margin-bottom: 0.5rem;
+        margin-top: 0.25rem;
+        font-size: 1.875rem;
+      }
+    }
+
+    .btn-close {
+      border: none;
+      background-color: transparent;
+      font-size: 1rem;
+      font-weight: bold;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
