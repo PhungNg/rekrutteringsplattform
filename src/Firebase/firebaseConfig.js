@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { doc, addDoc, getDocs, getDoc, updateDoc, arrayUnion, collection, getFirestore } from "firebase/firestore";
+import { doc, addDoc, getDocs, getDoc, updateDoc, arrayUnion, collection, getFirestore, deleteDoc } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -59,6 +59,10 @@ export const addCandidate = async ({
     } catch (e) {
         console.error("Error adding document: ", e)
     }
+}
+
+export const deleteCandidate = async (id) => {
+  await deleteDoc(doc(db, "candidates", id))
 }
 
 export const addDialog = async (id, dialog) => {
