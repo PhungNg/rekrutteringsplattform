@@ -17,11 +17,10 @@ import {
 import Button from '../Button'
 import Input from '../Input'
 import Accordion from '../Accordion'
-import { addDialog, getCandidate, deleteCandidate } from '../../Firebase/firebaseConfig'
+import { addDialog, getCandidate, deleteCandidate, updateCandidates } from '../../Firebase/firebaseConfig'
 import './index.scss';
 
 const CandidateProfile = ({candidate}) => {
-    const [ view, setView ] = useState("Oversikt")
     const {
         acquaintance, 
         comments, 
@@ -36,9 +35,84 @@ const CandidateProfile = ({candidate}) => {
         role, 
         status, 
         yearsOfExperience} = candidate;
-
+    
+    const [ view, setView ] = useState("Oversikt")
+    
+    const formRef = useRef(null)
+    
     const [ editInfo, setEditInfo ] = useState(false)
+
     const Overview = () => {
+        const [ change, setChange ] = useState(false)
+        const [ currentData, setCurrentData ] = useState()
+        const [ formObject, setFormObject ] = useState(currentData)
+
+        useEffect(()=>{
+            let data = new FormData(formRef.current)
+            setCurrentData(Object.fromEntries(data.entries()))
+
+        },[])
+
+        const Header = () => {
+            const handleDeleteCandidate = () => {
+                // deleteCandidate(id)
+            }
+        
+            const handelCancel = () => {
+                setEditInfo(!editInfo)
+                setChange(false)
+            }
+    
+            const handelSave = () => {
+                const data = new FormData(formRef.current)
+                const updatedData = Object.fromEntries(data.entries())
+
+                for (let key in updatedData) {
+                    if(currentData[key] === updatedData[key]) {
+                        delete updatedData[key]
+                    } else {
+                        console.log([key])
+                        console.log(updatedData[key])
+                        setCurrentData(currentData => ({...currentData, [key]: currentData[key]}))
+                    }
+                }
+                updateCandidates(id, updatedData)
+                console.log(currentData)
+                setEditInfo(false)
+                setChange(false)
+            }
+            
+            const EditDeleteButtons = () => (
+                <>
+                    <Button text={"Rediger"} icon={edit} className="" onClick={()=>setEditInfo(!editInfo)}/>
+                    <Button text="Slett kandiddat" icon={bin} className="" onClick={()=> handleDeleteCandidate()}/>
+                </>
+            )
+            
+            const SaveCancelButtons = () => (
+                <>
+                    {change && <Button text="Lagre endringer" onClick={() => handelSave()} />}
+                    <Button text="Avbryt" onClick={() => handelCancel()} />
+                </>
+            )
+            
+            return (
+                <header>
+                    <h2>{view}</h2>
+                    <div className="d-flex">
+                        {!editInfo
+                            ? <EditDeleteButtons />
+                            : <SaveCancelButtons />
+                        }
+                    </div>        
+                </header>
+            )
+        }
+
+        const handelOnChange = (e, bool) => {
+            setChange(bool)
+        }
+
         const candidateStatus = (status) => {
             let className = ""
     
@@ -59,22 +133,39 @@ const CandidateProfile = ({candidate}) => {
         }
 
         return (
-            <div className={`overview`}>
+            <>
+            <Header />
+            <form ref={formRef} className={`overview`}>
                 <div>
-                    <Input className={candidateStatus(status)} disabled={!editInfo} label="Status" icon={flag} id="status" defaultValue={status}/>
-                    <Input disabled={!editInfo} label="Stilling" icon={rocket} id="role" defaultValue={role}/>
-                    <Input disabled={!editInfo} label="Avdeling" icon={key} id="department" defaultValue={department}/>
-                    <Input disabled={!editInfo} label="Firma / skole" icon={home} id="company" defaultValue={company}/>
-                    <Input disabled={!editInfo} label="Års erfaring" icon={clock} id="yearsOfExperience" defaultValue={yearsOfExperience}/>
+                    <Input disabled={!editInfo} onChange={handelOnChange} className={candidateStatus(status)} type="select" id="status" label="Status" defaultValue={status}>
+                      <option value="Ikke kontaktet">Ikke kontaktet</option>
+                      <option value="Kontaktet">Kontaktet</option>
+                      <option value="Til 1. intervju">Til 1. intervju</option>
+                      <option value="Til 2. intervju">Til 2. intervju</option>
+                      <option value="Tilbud sendt">Tilbud sendt</option>
+                      <option value="Tilbud godtatt">Tilbud godtatt</option>
+                      <option value="Ikke aktuell">Ikke aktuell</option>
+                    </Input>
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Stilling" icon={rocket} id="role" defaultValue={role}/>
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Avdeling" type="select" icon={key} id="department" defaultValue={department}>
+                      <option value="Arkitektur">Arkitektur</option>
+                      <option value="Experience">Experience</option>
+                      <option value="Test of prosjekt">Test of prosjekt</option>
+                      <option value="Utvikling">Utvikling</option>
+                    </Input>
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Firma / skole" icon={home} id="company" defaultValue={company} />
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Års erfaring" icon={clock} id="yearsOfExperience" defaultValue={yearsOfExperience} />
                 </div>
                 <div>
-                    <Input disabled={!editInfo} label="Ansvarlig" icon={profile} id="leader" defaultValue={leader}/>
-                    <Input disabled={!editInfo} label="Bekjentskap" icon={chain} id="acquaintance" defaultValue={acquaintance}/>
-                    <Input disabled={!editInfo} label="Telefon" icon={phone} id="phone" defaultValue={phonenumber}/>
-                    <Input disabled={!editInfo} label="Epost" icon={mailIcon} id="mail" defaultValue={mail}/>
-                    <Input disabled={!editInfo} label="Oppfølging" icon={calendar} id="followUpTime" defaultValue={followUpTime}/>
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Ansvarlig" icon={profile} id="leader" defaultValue={leader} />
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Bekjentskap" icon={chain} id="acquaintance" defaultValue={acquaintance} />
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Telefon" icon={phone} id="phonenumber" defaultValue={phonenumber} />
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Epost" icon={mailIcon} id="mail" defaultValue={mail}/>
+                    <Input disabled={!editInfo} onChange={handelOnChange} label="Oppfølging" icon={calendar} id="followUpTime" defaultValue={followUpTime} />
                 </div>
-            </div>
+            </form>
+            </>
+
         )
     }
 
@@ -97,26 +188,29 @@ const CandidateProfile = ({candidate}) => {
             }
             return docName;
         }
-        (
+
+        return (
             <div className="documents">
-            {files
-                ? files.map((file, i) => (
-                    <div key={i}>
-                        {Object.keys(file).map((key, i) => (
-                            <React.Fragment key={i}>
-                                <div>
-                                    <img src={fileIcon} className="icon" alt="" />
-                                    <p>{documentName(key)}</p>
-                                </div>
-                                <a href={file[key].url}>{file[key].fileName}</a>
-                            </React.Fragment>
-                        ))}
-                        <div>
-                            <Button className={"btn-icon"} icon={edit}/>
-                            <Button className={"btn-icon"} icon={bin}/>
-                        </div>
-                    </div>))
-                : <h3>Ingen dokumenter</h3>}
+                {files
+                    ? files.map((file, i) => (
+                        <div key={i}>
+                            {console.log(file)}
+                            {Object.keys(file).map((key, i) => (
+                                <React.Fragment key={i}>
+                                    <div>
+                                        <img src={fileIcon} className="icon" alt="" />
+                                        <p>{documentName(key)}</p>
+                                    </div>
+                                    <a href={file[key].url}>{file[key].fileName}</a>
+                                </React.Fragment>
+                            ))}
+                            <div>
+                                <Button className={"btn-icon"} icon={edit}/>
+                                <Button className={"btn-icon"} icon={bin}/>
+                            </div>
+                        </div>))
+                    : <h3>Ingen dokumenter</h3>
+                }
             </div>
         )
     }
@@ -126,7 +220,7 @@ const CandidateProfile = ({candidate}) => {
         const [ dialogList, setDialogList ] = useState([])
 
         const getDialogs = useCallback(async() => {
-            let data = await getCandidate(id)
+            let data = await getCandidate(id) // TODO: check again
             setDialogList(dialogList => dialogList = data.dialogs)
         }, [])
         
@@ -169,9 +263,6 @@ const CandidateProfile = ({candidate}) => {
         )
     }
 
-    const handleDeleteCandidate = () => {
-        deleteCandidate(id)
-    }
     return (
         <div className="candidate-profile">
             <ul className="tab">
@@ -186,15 +277,7 @@ const CandidateProfile = ({candidate}) => {
                 </li>
             </ul>
             <section>
-                <header>
-                    <h2>{view}</h2>
-                    <div className="d-flex">
-                        <Button text={editInfo ? "Ferdig å redigere" : "Rediger"} icon={edit} className="" onClick={()=>setEditInfo(!editInfo)}/>
-                        {!editInfo &&
-                            <Button text="Slett kandiddat" icon={bin} className="" onClick={()=> handleDeleteCandidate()}/>
-                        }
-                    </div>
-                </header>
+                {/* <Header /> */}
                 <div className="info-container">
                     {view === "Oversikt"
                         ? <Overview />
