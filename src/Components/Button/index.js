@@ -3,15 +3,15 @@ import classnames from "classnames";
 
 import './index.scss';
 
-const Button = ({text, amount, className, icon, onClick}) => {
+const Button = ({text, amount, className, icon, onClick, form}) => {
     const btnClasses = classnames(
         "btn",
         className ? className : null,
-        icon ? "icon" : null
     )
 
     const attrs = {
-        onClick: onClick || null
+        onClick: onClick || null,
+        form: form || null
     }
 
     return (
