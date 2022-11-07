@@ -3,18 +3,18 @@ import upload from '../../Icons/upload.png'
 
 import './index.scss';
 
-const Input = ({type, id, name, placeholder, label, textarea, rows, children}) => {
+const Input = ({type, id, className, placeholder, disabled, label, icon, textarea, defaultValue, rows, children}) => {
+    const uploadContainer = useRef(null);
     const attrs = {
         type: type ? type : "text",
         id,
         name: id,
         placeholder,
-        rows
+        rows,
+        defaultValue,
+        disabled: disabled || null
     }
 
-    const uploadContainer = useRef(null);
-
-    
     const FileTemplate = () => {
         const [fileName, setFileName] = useState()
 
@@ -69,8 +69,11 @@ const Input = ({type, id, name, placeholder, label, textarea, rows, children}) =
     )
 
     return (
-        <div className="input-container">
-            <label htmlFor={id}>{label}</label>
+        <div className={`input-container ${className ? className : ""}`}>
+            <label htmlFor={id}>
+                { icon && <img src={icon} alt="" />}
+                {label}
+            </label>
             {type === 'file'
                 ? <FileTemplate />
                 : type === 'select'
