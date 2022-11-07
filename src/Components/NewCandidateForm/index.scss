@@ -1,0 +1,53 @@
+@import '../../_variables.scss';
+
+form {
+    &#new-candidate {
+      width: 40.5rem;
+      
+      .success {
+        padding-top: 3rem;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid $grayscale-color-200;
+        border-radius: 4px;
+      }
+
+      fieldset {
+        &.basic-info {
+          padding: 0;
+          padding-bottom: 1rem;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+          border: none;
+
+          .input-container {
+            &:last-child {
+              grid-column-start: 1;
+              grid-column-end: 3;
+            }
+          }
+        }
+        
+        &.file-upload {
+          padding-left: 0;
+          padding-right: 0;
+          border: none;
+          
+          input {
+            width: 100%;
+            border: none;
+          }
+        }
+      }
+      
+      .button-container {
+        display: flex;
+        justify-content: end;
+        
+        button:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
