@@ -1,0 +1,143 @@
+@import '../../_variables.scss';
+
+.candidate-profile {
+    width: 64rem;
+
+    .tab {
+     list-style: none; 
+     display: flex;
+     padding-left: 0;
+    
+     li {
+      margin-right: 2.5rem;
+      border-bottom: 3px solid transparent;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+
+      &.selected {
+        border-bottom: 3px solid $primary-color-core;
+      }
+     }
+    }
+
+    section {
+      border: none;
+      padding: 0;
+
+      .info-container {
+        background-color: $grayscale-color-50;
+        border-radius: 0.5rem;
+        
+        .overview {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          padding: 1rem;
+          gap: 1rem;
+
+          .input-container {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr;
+            
+            label {
+              font-weight: 500;
+              font-size: 1rem;
+            }
+
+            input {
+              font-size: 1rem;
+
+              &:disabled {
+                color: #000000;
+                border-color: transparent;
+                margin-top: 0;
+              }
+            }
+
+            &.status-accepted,
+            &.status-waiting,
+            &.status-error {
+              input {
+                &:disabled {
+                  width: fit-content;
+                  padding: 3px 6px;
+                  border-radius: 4px;
+                  border: 1px solid $grayscale-color-200;
+                }
+              }
+            }
+
+            &.status-accepted {
+              input {
+                &:disabled {
+                  color: #FFFFFF;
+                  background-color: $success-color-1;
+                }
+              }
+            }
+
+            &.status-waiting {
+              input {
+                &:disabled {
+                  background-color: $warning-color-1;
+                }
+              }
+            }
+            
+            &.status-error {
+              input {
+                &:disabled {
+                  color: #FFFFFF;
+                  background-color: $error-color-1;
+                }
+              }
+            }
+              
+          }
+        }     
+
+        .documents {
+          padding: 0 1rem;
+
+          > div {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+          
+            > div {
+              display: flex;
+              align-items: center;
+              
+              p {
+                margin-left: 0.5rem;
+              }
+            }
+
+            div:last-child {
+              justify-content: end;
+
+              button:last-child {
+                margin-right: 0;
+              }
+            }
+          }
+        }
+        
+        .conversation {
+          background-color: #ffffff;
+        }
+      }
+      
+      .text-container {
+        padding: 1rem;
+        padding-bottom: 0;
+        margin-top: 1rem;
+        border: 1px solid $grayscale-color-200;
+        border-radius: 4px;
+
+        h3 {
+          margin-top: 0;
+        }
+      }
+    }
+  }
