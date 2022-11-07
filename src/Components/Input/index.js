@@ -1,10 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import upload from '../../Icons/upload.png'
 
 import './index.scss';
 
-const Input = ({type, id, className, placeholder, disabled, label, icon, textarea, defaultValue, rows, children}) => {
+const Input = ({
+    className,
+    children,
+    defaultValue,
+    disabled,
+    icon,
+    id,
+    label,
+    onChange,
+    placeholder,
+    rows,
+    textarea,
+    type }) => {
+
     const uploadContainer = useRef(null);
+
     const attrs = {
         type: type ? type : "text",
         id,
@@ -12,7 +26,8 @@ const Input = ({type, id, className, placeholder, disabled, label, icon, textare
         placeholder,
         rows,
         defaultValue,
-        disabled: disabled || null
+        disabled: disabled || null,
+        onChange: (e)=>onChange(e, true)
     }
 
     const FileTemplate = () => {
@@ -61,7 +76,7 @@ const Input = ({type, id, className, placeholder, disabled, label, icon, textare
     }
 
     const SelectTemplate = () => (
-        <div className="select-container">
+        <div className={`select-container${disabled ? " disabled" : ""}`}>
             <select {...attrs} >
                 {children}
             </select>
