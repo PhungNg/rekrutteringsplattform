@@ -2,6 +2,6 @@
     "hosting": {
       "site": "rekruttering",
   
-      "public": "public"
+      "public": "build"
     }
   }
