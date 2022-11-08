@@ -27,7 +27,7 @@ const Input = ({
         rows,
         defaultValue,
         disabled: disabled || null,
-        onChange: (e)=>onChange(e, true)
+        onChange: onChange ? (e)=>onChange(e, true) : null
     }
 
     const FileTemplate = () => {
