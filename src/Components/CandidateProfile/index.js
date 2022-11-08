@@ -6,11 +6,9 @@ import {
     clock,
     edit,
     file as fileIcon,
-    flag,
     home,
     key,
     mail as mailIcon,
-    plusBlack,
     phone,
     profile,
     rocket } from '../../Icons/index.js'
@@ -20,7 +18,7 @@ import Accordion from '../Accordion'
 import { addDialog, getCandidate, deleteCandidate, updateCandidates } from '../../Firebase/firebaseConfig'
 import './index.scss';
 
-const CandidateProfile = ({candidate}) => {
+const CandidateProfile = ({candidate, closeDialog}) => {
     const {
         acquaintance, 
         comments, 
@@ -40,12 +38,10 @@ const CandidateProfile = ({candidate}) => {
     
     const formRef = useRef(null)
     
-    const [ editInfo, setEditInfo ] = useState(false)
-
     const Overview = () => {
         const [ change, setChange ] = useState(false)
         const [ currentData, setCurrentData ] = useState()
-        const [ formObject, setFormObject ] = useState(currentData)
+        const [ editInfo, setEditInfo ] = useState(false)
 
         useEffect(()=>{
             let data = new FormData(formRef.current)
@@ -55,7 +51,8 @@ const CandidateProfile = ({candidate}) => {
 
         const Header = () => {
             const handleDeleteCandidate = () => {
-                // deleteCandidate(id)
+                deleteCandidate(id)
+                closeDialog()
             }
         
             const handelCancel = () => {
@@ -71,13 +68,10 @@ const CandidateProfile = ({candidate}) => {
                     if(currentData[key] === updatedData[key]) {
                         delete updatedData[key]
                     } else {
-                        console.log([key])
-                        console.log(updatedData[key])
                         setCurrentData(currentData => ({...currentData, [key]: currentData[key]}))
                     }
                 }
                 updateCandidates(id, updatedData)
-                console.log(currentData)
                 setEditInfo(false)
                 setChange(false)
             }
@@ -95,6 +89,16 @@ const CandidateProfile = ({candidate}) => {
                     <Button text="Avbryt" onClick={() => handelCancel()} />
                 </>
             )
+            useEffect(() => {
+                if(change){const handleEnter = (event) => {
+                   if (event.keyCode === 13) {
+                    handelSave()
+                  }
+                };
+                window.addEventListener('keydown', handleEnter);
+            
+                return () => window.removeEventListener('keydown', handleEnter)}
+              });
             
             return (
                 <header>
@@ -137,7 +141,7 @@ const CandidateProfile = ({candidate}) => {
             <Header />
             <form ref={formRef} className={`overview`}>
                 <div>
-                    <Input disabled={!editInfo} onChange={handelOnChange} className={candidateStatus(status)} type="select" id="status" label="Status" defaultValue={status}>
+                    <Input disabled={!editInfo} onChange={(e)=>handelOnChange(e)} className={candidateStatus(status)} type="select" id="status" label="Status" defaultValue={status}>
                       <option value="Ikke kontaktet">Ikke kontaktet</option>
                       <option value="Kontaktet">Kontaktet</option>
                       <option value="Til 1. intervju">Til 1. intervju</option>
@@ -150,7 +154,7 @@ const CandidateProfile = ({candidate}) => {
                     <Input disabled={!editInfo} onChange={handelOnChange} label="Avdeling" type="select" icon={key} id="department" defaultValue={department}>
                       <option value="Arkitektur">Arkitektur</option>
                       <option value="Experience">Experience</option>
-                      <option value="Test of prosjekt">Test of prosjekt</option>
+                      <option value="Test og prosjekt">Test og prosjekt</option>
                       <option value="Utvikling">Utvikling</option>
                     </Input>
                     <Input disabled={!editInfo} onChange={handelOnChange} label="Firma / skole" icon={home} id="company" defaultValue={company} />
