@@ -8,6 +8,7 @@ import clock from './clock.png'
 import edit from './edit.png'
 import file from './file.png'
 import flag from './flag.png'
+import funnel from './funnel.png'
 import home from './home.png'
 import key from './key.png'
 import mail from './mail.png'
@@ -18,6 +19,8 @@ import plusBlack from './plus-black.png'
 import profile from './profile.png'
 import profileCheck from './profile-check.png'
 import rocket from './rocket.png'
+import search from './search.png'
+import sort from './sort.png'
 import upload from './upload.png'
 
 export {
@@ -31,6 +34,7 @@ export {
     edit,
     file,
     flag,
+    funnel,
     home,
     key,
     mail,
@@ -41,5 +45,7 @@ export {
     profile,
     profileCheck,
     rocket,
+    search,
+    sort,
     upload
 }
