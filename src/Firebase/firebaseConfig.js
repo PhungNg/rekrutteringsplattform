@@ -1,6 +1,19 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { doc, addDoc, getDocs, getDoc, updateDoc, arrayUnion, collection, getFirestore, deleteDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getDoc,
+  getFirestore,
+  query,
+  updateDoc,
+  setDoc ,
+  where
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -60,6 +73,16 @@ export const addCandidate = async ({
         console.error("Error adding document: ", e)
     }
 }
+// acquaintance, company, department, followUpTime, leader, mail, phonenumber, role, status, yearsOfExperience
+export const updateCandidates = async (id, data) => {
+  for (const key in data) {
+    await setDoc(doc(db, "candidates", id), {
+      [key]: data[key]
+    }, {merge: true})
+
+  }
+
+}
 
 export const deleteCandidate = async (id) => {
   await deleteDoc(doc(db, "candidates", id))
@@ -69,6 +92,19 @@ export const addDialog = async (id, dialog) => {
   await updateDoc(doc(db, "candidates", id), {
     dialogs: arrayUnion(dialog)
   })
+}
+
+export const filter = async (field, value) => {
+  const q = query(collection(db, "candidates"), where(field, "==", value))
+  let filterList = []
+
+  const querySnapshot = await getDocs(q)
+  querySnapshot.forEach((doc) => {
+    let data = doc.data()
+    data.id = doc.id
+    filterList.push(data)
+  })
+  return filterList
 }
 
 export const getCandidate = async id => {
