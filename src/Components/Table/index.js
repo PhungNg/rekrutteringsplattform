@@ -1,10 +1,35 @@
 import React from "react";
-
+import { sort } from "../../Icons"
 import './index.scss';
 
-const Table = ({candidates, onClick}) => {
-    const headers = ["Navn", "Stilling", "Oppfølging", "Ansvarlig", "Telefon", "Status"]
-
+const Table = ({ candidates, onClick, handelSort }) => {
+    const headers = [
+        {
+            title: "Navn",
+            name: "firstname"
+        },
+        {
+            title: "Stilling",
+            name: "role"
+        },
+        {
+            title: "Oppfølging",
+            name: "followUpTime"
+        },
+        {
+            title: "Ansvarlig",
+            name: "leader"
+        },
+        {
+            title: "Telefon",
+            name: "phonenumber",
+            classname: "no-sort"
+        },
+        {
+            title: "Status",
+            name: "status"
+        },
+    ]
     const setStatusClass = (status) => {
         let className;
 
@@ -58,11 +83,14 @@ const Table = ({candidates, onClick}) => {
         <table className="table">
             <caption>
                 <h2>Alle kandidater</h2>
+                <button>a</button>
             </caption>
             <thead>
                 <tr>
-                    {headers.map((th, i) => 
-                        <th key={th + i}>{th}</th>
+                    {headers.map(({title, name, classname}, key) => 
+                        <th key={key} className={classname && classname} onClick={() => handelSort(name)}>
+                            <div className="d-flex align-items-center justify-content-between">{title} {title !== "Telefon" && <img src={sort} alt="" />}</div>
+                        </th>
                     )}
                 </tr>
             </thead>
