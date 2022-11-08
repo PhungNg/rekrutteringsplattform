@@ -83,7 +83,6 @@ const Table = ({ candidates, onClick, handelSort }) => {
         <table className="table">
             <caption>
                 <h2>Alle kandidater</h2>
-                <button>a</button>
             </caption>
             <thead>
                 <tr>

@@ -198,7 +198,6 @@ const CandidateProfile = ({candidate, closeDialog}) => {
                 {files
                     ? files.map((file, i) => (
                         <div key={i}>
-                            {console.log(file)}
                             {Object.keys(file).map((key, i) => (
                                 <React.Fragment key={i}>
                                     <div>
