@@ -6,8 +6,31 @@
     border-spacing: 8px;
 
     caption{
+        position: relative;
         text-align: left;
         margin-bottom: 0.5rem;
+
+        h2,
+        > div {
+            display: inline-flex;
+        }
+
+        > div {
+            position: absolute;
+            right: 0;
+
+            .btn {
+                margin-right: 0;
+                width: 8rem;
+                height: 100%;
+                min-height: 2.5rem;
+
+                img {
+                    margin-left: auto;
+                }
+            }
+        }
+
     }
 
     thead {
