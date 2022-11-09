@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { useEffect } from 'react';
 import upload from '../../Icons/upload.png'
 
 import './index.scss';
@@ -40,9 +41,10 @@ const Input = ({
         }
         
         const changeHandler = (e) => {
+            if(onChange) onChange(e, true)
             setFileName(e.target.value.split('\\').pop())
         }
-    
+
         const dragEnterHandler = () => {
             uploadContainer.current.classList.add("active")
         }
@@ -50,6 +52,10 @@ const Input = ({
         const dragLeaveHandler = () => {
             uploadContainer.current.classList.remove("active")
         }
+
+        useEffect(()=>{
+            if(onChange) onChange(null, true)
+        },[fileName])
 
         return (
             <div ref={uploadContainer} className="upload-container">
@@ -83,6 +89,12 @@ const Input = ({
         </div>
     )
 
+    const SearchTemplate = () => (
+        <div className="search-container">
+            <input {...attrs} />
+        </div>
+    )
+
     return (
         <div className={`input-container ${className ? className : ""}`}>
             <label htmlFor={id}>
@@ -95,8 +107,9 @@ const Input = ({
                     ? <SelectTemplate />
                     : textarea
                         ? <textarea {...attrs} rows={rows}></textarea>
-                        : <input {...attrs} />
-                         
+                        : className === "search"
+                            ? <SearchTemplate />
+                            : <input {...attrs} />
             }
         </div>
     )
