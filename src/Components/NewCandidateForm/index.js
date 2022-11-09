@@ -74,7 +74,7 @@ const NewCandidateForm = ({setFormStep, formStep, closeDialog }) => {
         <Input id="department" type="select" label="Avdeling">
           <option value="Arkitektur">Arkitektur</option>
           <option value="Experience">Experience</option>
-          <option value="Test og prosjekt">Test og prosjekt</option> {/* TODO: typo */}
+          <option value="Test og prosjekt">Test og prosjekt</option>
           <option value="Utvikling">Utvikling</option>
         </Input>
         <Input type="select" id="status" label="Status">

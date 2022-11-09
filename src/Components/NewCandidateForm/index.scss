@@ -43,7 +43,7 @@ form {
       
       .button-container {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         
         button:last-child {
           margin-right: 0;
