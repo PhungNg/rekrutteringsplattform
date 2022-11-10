@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { addCandidate } from '../../Firebase/firebaseConfig'
-import { storage } from '../../Firebase/firebaseConfig'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { uploadFiles } from '../../Firebase/firebaseConfig'
 import Button from '../Button'
 import Input from '../Input'
 
@@ -15,30 +14,8 @@ const NewCandidateForm = ({setFormStep, formStep, closeDialog }) => {
   const [ btnText, setBtnText ] = useState("Neste")
 
   const formRef = useRef(null)
-  
-  const uploadFiles = (files) => {
-    setTotalFiles(Object.keys(files).length)
 
-    for(let key in files) {
-      const fileRef = ref(storage, `${formObject.firstname}${formObject.lastname}/${files[key].name}`)
-      
-      uploadBytes(fileRef, files[key])
-      .then(() => {
-        getDownloadURL(fileRef)
-        .then((url) => {
-          let obj = { [key]:
-            {
-              fileName: files[key].name,
-              url: url
-            }
-          }
-          setFilesList( filesList => ([...filesList, obj]))
-        })
-      })
-    }
-  }
-
-  const formHandler = (e) => {
+  const formHandler = async(e) => {
     e.preventDefault()
     let data = new FormData(formRef.current);
 
@@ -50,13 +27,16 @@ const NewCandidateForm = ({setFormStep, formStep, closeDialog }) => {
       setFormObject(Object.fromEntries(data.entries()))
     } else {
       let obj = Object.fromEntries(data.entries())
+      const path = formObject.firstname + formObject.lastname
       
       for (const key in obj) {
         if(obj[key].name === '') {
           delete obj[key]
         }
       }
-      uploadFiles(obj)
+      setTotalFiles(Object.keys(obj).length)
+      const files = await uploadFiles(obj, path)
+      files.map(file => setFilesList(fileList => ([...fileList, file])))
     }
   }
 
@@ -71,7 +51,7 @@ const NewCandidateForm = ({setFormStep, formStep, closeDialog }) => {
         <Input id="yearsOfExperience" placeholder="7" label="Års erfaring"/>
         <Input id="leader" placeholder="Ansvarlig leder for oppfølging" label="Ansvarlig"/>
         <Input id="acquaintance" placeholder="Bekjentskap i Aboveit" label="Bekjentskap"/>
-        <Input id="department" type="select" label="Avdeling">
+        <Input id="department" type="select" label="Avdeling" >
           <option value="Arkitektur">Arkitektur</option>
           <option value="Experience">Experience</option>
           <option value="Test og prosjekt">Test og prosjekt</option>
@@ -123,7 +103,10 @@ const NewCandidateForm = ({setFormStep, formStep, closeDialog }) => {
   },[filesList, totalFiles, setFormStep, formStep])
   
   useEffect(() => {
-    if(formStep === 3) addCandidate(formObject)
+    if(formStep === 3) {
+      addCandidate(formObject)
+      console.log(formObject)
+    }
   },[formObject, formStep])
   
   return (
