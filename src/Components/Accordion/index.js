@@ -12,7 +12,7 @@ const Accordion = ({ classname, title, date, place, summary, form }) => {
         classname
     )
     return (
-        <div className={classes}>
+        <div className={classes} onClick={() => setIsActive(!isActive)}>
             <button className="accordion-header" onClick={() => setIsActive(!isActive)}>
                 <span>{title}</span>
                 {date && 
