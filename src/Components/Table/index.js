@@ -61,19 +61,19 @@ const Table = ({ candidates, onClick, handelSort, children }) => {
                         <div>{candidate.firstname} {candidate.lastname}</div>
                     </td>
                     <td>
-                        <div>{candidate.role}</div>
+                        <div>{candidate.role || "TBD"}</div>
                     </td>
                     <td>
-                        <div>{candidate.followUpTime}</div>
+                        <div>{candidate.followUpTime || "TBD"}</div>
                     </td>
                     <td>
-                        <div>{candidate.leader}</div>
+                        <div>{candidate.leader || "TBD"}</div>
                     </td>
                     <td>
-                        <div>{candidate.phonenumber}</div>
+                        <div>{candidate.phonenumber || "TBD"}</div>
                     </td>
                     <td>
-                        <div>{candidate.status}</div>
+                        <div>{candidate.status || "TBD"}</div>
                     </td>
                 </tr>
             ))}
