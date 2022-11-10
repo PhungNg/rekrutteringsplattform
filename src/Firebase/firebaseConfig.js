@@ -12,9 +12,10 @@ import {
   query,
   updateDoc,
   setDoc ,
-  where
+  where,
+  arrayRemove
 } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -79,18 +80,48 @@ export const updateCandidates = async (id, data) => {
     await setDoc(doc(db, "candidates", id), {
       [key]: data[key]
     }, {merge: true})
-
   }
-
 }
 
-export const deleteCandidate = async (id) => {
+export const uploadFiles = async(files, path) => {
+  let fileList = []
+
+  for(let key in files) {
+    const fileRef = ref(storage, `${path}/${files[key].name}`)
+    await uploadBytes(fileRef, files[key])
+    .then(async() => {
+      await getDownloadURL(fileRef)
+      .then((url) => {
+        let obj = { 
+          fileName: files[key].name,
+          url: url
+        }
+        fileList.push(obj)
+      })
+    })
+  }
+  return fileList
+}
+
+export const deleteCandidate = async (id, folder, files) => {
+  files.forEach(({fileName}) => {
+    deleteFile(folder, fileName)
+  })
   await deleteDoc(doc(db, "candidates", id))
 }
 
-export const addDialog = async (id, dialog) => {
-  await updateDoc(doc(db, "candidates", id), {
-    dialogs: arrayUnion(dialog)
+export const deleteFile = (folder, fileName) => {
+    const candidateRef = ref(storage, `${folder}/${fileName}`)
+    deleteObject(candidateRef)
+}
+
+// export delete
+
+export const updateDocArray = async (key, id, value, remove) => {
+  value.forEach(obj => {
+    updateDoc(doc(db, "candidates", id), {
+      [`${key}`]: remove ? arrayRemove(obj) : arrayUnion(obj)
+    })    
   })
 }
 
