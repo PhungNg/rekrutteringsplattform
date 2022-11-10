@@ -4,10 +4,10 @@
     width: 64rem;
 
     .tab {
-     list-style: none; 
+     list-style: none;
      display: flex;
      padding-left: 0;
-    
+
      li {
       margin-right: 2.5rem;
       border-bottom: 3px solid transparent;
@@ -30,15 +30,19 @@
           display: grid;
           grid-template-columns: 1fr 1fr;
           padding: 1rem;
+          margin-top: 1rem;
           gap: 1rem;
           background-color: $grayscale-color-50;
           border-radius: 0.5rem;
 
+          header {
+            justify-content: flex-end;
+          }
 
           .input-container {
             display: grid;
             grid-template-columns: 1fr 2.5fr;
-            
+
             label {
               font-weight: 500;
               font-size: 1rem;
@@ -56,10 +60,10 @@
                 margin-top: 0;
               }
             }
-            
+
             .select-container {
               background-color: #ffffff;
-              
+
               &.disabled{
                 border: none;
                 background-color: transparent;
@@ -95,14 +99,14 @@
 
             &.status-waiting {
               .select-container {
-                select { 
+                select {
                   &:disabled {
                     background-color: $warning-color-1;
                   }
                 }
               }
             }
-            
+
             &.status-error {
               .select-container {
                 select {
@@ -113,24 +117,33 @@
                 }
               }
             }
-              
+
           }
-        }     
+        }
 
         .documents {
-          padding: 0 1rem;
+          padding: 1rem;
+          padding-bottom: 0.25rem;
           background-color: $grayscale-color-50;
           border-radius: 0.5rem;
 
+          h3 {
+            margin-top: 0;
+          }
+
           > div {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-          
+
             > div {
               display: flex;
               align-items: center;
-              
+
+              .icon {
+                margin-right: 0.5rem;
+              }
+
               p {
                 margin-left: 0.5rem;
               }
@@ -144,9 +157,28 @@
               }
             }
           }
+
+          form {
+            .input-container {
+              display: block;
+              margin-top: 1rem;
+              padding-top: 2rem;
+              border-top: 2px solid $grayscale-color-200;
+
+              .upload-text-container {
+                justify-content: center;
+              }
+            }
+
+            .btn {
+              margin-right: 0;
+              margin-left: auto;
+              margin-bottom: 0.5rem;
+            }
+          }
         }
       }
-      
+
       .text-container {
         padding: 1rem;
         padding-bottom: 0;

@@ -15,43 +15,51 @@ import {
 import Button from '../Button'
 import Input from '../Input'
 import Accordion from '../Accordion'
-import { addDialog, getCandidate, deleteCandidate, updateCandidates } from '../../Firebase/firebaseConfig'
+import { updateDocArray, getCandidate, deleteCandidate, deleteFile, updateCandidates, uploadFiles } from '../../Firebase/firebaseConfig'
 import './index.scss';
 
-const CandidateProfile = ({candidate, closeDialog}) => {
-    const {
-        acquaintance, 
-        comments, 
-        company, 
-        department, 
-        files, 
-        followUpTime, 
-        leader, 
-        id,
-        mail, 
-        phonenumber, 
-        role, 
-        status, 
-        yearsOfExperience} = candidate;
-    
+const CandidateProfile = ({closeDialog, id}) => {
     const [ view, setView ] = useState("Oversikt")
     
-    const formRef = useRef(null)
     
     const Overview = () => {
         const [ change, setChange ] = useState(false)
         const [ currentData, setCurrentData ] = useState()
         const [ editInfo, setEditInfo ] = useState(false)
+        const [ candidate, setCandidate ] = useState({})
+        const formRef = useRef(null)
+
+        const {
+            acquaintance, 
+            comments, 
+            company, 
+            department, 
+            files, 
+            firstname, 
+            followUpTime, 
+            lastname, 
+            leader, 
+            mail, 
+            phonenumber, 
+            role, 
+            status, 
+            yearsOfExperience} = candidate;
+        
+        const updateCandidate = useCallback(async() => {
+            let data = await getCandidate(id)
+            setCandidate(data)
+        },[])
 
         useEffect(()=>{
             let data = new FormData(formRef.current)
             setCurrentData(Object.fromEntries(data.entries()))
-
-        },[])
+            updateCandidate()
+        },[updateCandidate])
 
         const Header = () => {
             const handleDeleteCandidate = () => {
-                deleteCandidate(id)
+                const storageFolder = firstname + lastname
+                deleteCandidate(id, storageFolder, files)
                 closeDialog()
             }
         
@@ -101,19 +109,16 @@ const CandidateProfile = ({candidate, closeDialog}) => {
               });
             
             return (
-                <header>
-                    <h2>{view}</h2>
-                    <div className="d-flex">
-                        {!editInfo
-                            ? <EditDeleteButtons />
-                            : <SaveCancelButtons />
-                        }
-                    </div>        
-                </header>
+                <div className="d-flex justify-content-end">
+                    {!editInfo
+                        ? <EditDeleteButtons />
+                        : <SaveCancelButtons />
+                    }
+                </div>
             )
         }
 
-        const handelOnChange = (e, bool) => {
+        const handelOnChange = (bool) => {
             setChange(bool)
         }
 
@@ -138,82 +143,100 @@ const CandidateProfile = ({candidate, closeDialog}) => {
 
         return (
             <>
-            <Header />
-            <form ref={formRef} className={`overview`}>
-                <div>
-                    <Input disabled={!editInfo} onChange={(e)=>handelOnChange(e)} className={candidateStatus(status)} type="select" id="status" label="Status" defaultValue={status}>
-                      <option value="Ikke kontaktet">Ikke kontaktet</option>
-                      <option value="Kontaktet">Kontaktet</option>
-                      <option value="Til 1. intervju">Til 1. intervju</option>
-                      <option value="Til 2. intervju">Til 2. intervju</option>
-                      <option value="Tilbud sendt">Tilbud sendt</option>
-                      <option value="Tilbud godtatt">Tilbud godtatt</option>
-                      <option value="Ikke aktuell">Ikke aktuell</option>
-                    </Input>
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Stilling" icon={rocket} id="role" defaultValue={role}/>
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Avdeling" type="select" icon={key} id="department" defaultValue={department}>
-                      <option value="Arkitektur">Arkitektur</option>
-                      <option value="Experience">Experience</option>
-                      <option value="Test og prosjekt">Test og prosjekt</option>
-                      <option value="Utvikling">Utvikling</option>
-                    </Input>
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Firma / skole" icon={home} id="company" defaultValue={company} />
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Års erfaring" icon={clock} id="yearsOfExperience" defaultValue={yearsOfExperience} />
+                <Header />
+                <form ref={formRef} className={`overview`}>
+                    <div>
+                        <Input disabled={!editInfo} onChange={handelOnChange} className={candidateStatus(status)} type="select" id="status" label="Status" defaultValue={status}>
+                          <option value="Ikke kontaktet">Ikke kontaktet</option>
+                          <option value="Kontaktet">Kontaktet</option>
+                          <option value="Til 1. intervju">Til 1. intervju</option>
+                          <option value="Til 2. intervju">Til 2. intervju</option>
+                          <option value="Tilbud sendt">Tilbud sendt</option>
+                          <option value="Tilbud godtatt">Tilbud godtatt</option>
+                          <option value="Ikke aktuell">Ikke aktuell</option>
+                        </Input>
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Stilling" icon={rocket} id="role" defaultValue={role}/>
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Avdeling" type="select" icon={key} id="department" defaultValue={department}>
+                          <option value="Arkitektur">Arkitektur</option>
+                          <option value="Experience">Experience</option>
+                          <option value="Test og prosjekt">Test og prosjekt</option>
+                          <option value="Utvikling">Utvikling</option>
+                        </Input>
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Firma / skole" icon={home} id="company" defaultValue={company} />
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Års erfaring" icon={clock} id="yearsOfExperience" defaultValue={yearsOfExperience} />
+                    </div>
+                    <div>
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Ansvarlig" icon={profile} id="leader" defaultValue={leader} />
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Bekjentskap" icon={chain} id="acquaintance" defaultValue={acquaintance} />
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Telefon" icon={phone} id="phonenumber" defaultValue={phonenumber} />
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Epost" icon={mailIcon} id="mail" defaultValue={mail}/>
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Oppfølging" icon={calendar} id="followUpTime" defaultValue={followUpTime} />
+                    </div>
+                </form>
+                <div className="text-container">
+                    <h3>Kommentar</h3>
+                    <p>{comments}</p>
                 </div>
-                <div>
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Ansvarlig" icon={profile} id="leader" defaultValue={leader} />
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Bekjentskap" icon={chain} id="acquaintance" defaultValue={acquaintance} />
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Telefon" icon={phone} id="phonenumber" defaultValue={phonenumber} />
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Epost" icon={mailIcon} id="mail" defaultValue={mail}/>
-                    <Input disabled={!editInfo} onChange={handelOnChange} label="Oppfølging" icon={calendar} id="followUpTime" defaultValue={followUpTime} />
-                </div>
-            </form>
             </>
-
         )
     }
 
     const Documents = () => {
-        const documentName = (string) => {
-            let docName;
-            switch(string) {
-                case "cv":
-                    docName = "CV"
-                    break;
-                case "grades":
-                    docName = "Karakterutskrift"
-                    break;
-                case "gradesVgs":
-                    docName = "Karakterutskrift Vgs"
-                    break;
-                default:
-                    docName = "Søknadstekst"
-                    break;
-            }
-            return docName;
+        const [ docList, setDocList] = useState([])
+        const [ path, setPath] = useState()
+        const formRef = useRef(null)
+
+        const getDocuments = useCallback(async() => {
+            const data = await getCandidate(id)
+            setDocList(data.files)
+            setPath(data.firstname + data.lastname)
+        },[])
+
+        const handleSaveFile = async(e) => {
+            e.preventDefault()
+            const data = new FormData(formRef.current)
+            const files = Object.fromEntries(data.entries())
+            const list = await uploadFiles(files, path)
+            updateDocArray("files", id, list)
+            setDocList(docList => [...docList, list[0]])
         }
 
+        const handelDelete = (fileName) => {
+            let files = docList.filter((file) => file.fileName === fileName)
+            
+            deleteFile(path, fileName)
+            updateDocArray("files", id, files, true)
+            setDocList(docList => docList.filter(file => file.fileName !== fileName))
+        }
+
+        useEffect(() => {
+            getDocuments()
+        },[getDocuments])
+
+        const DocumentsList = () => {
+            return(
+            docList.length > 0
+                ? <>
+                    <h3>Filnavn</h3>
+                    {docList.map(({url, fileName}, i) => (
+                        <div key={i}>
+                            <div>
+                                <img src={fileIcon} className="icon" alt="" />
+                                <a key={i} href={url}>{fileName}</a>
+                            </div>
+                            <Button className={"btn-icon"} icon={bin} onClick={()=>handelDelete(fileName)}/>
+                        </div>
+                    ))}
+                </>
+                : <h3>Ingen dokumenter</h3>
+        )}
         return (
             <div className="documents">
-                {files
-                    ? files.map((file, i) => (
-                        <div key={i}>
-                            {Object.keys(file).map((key, i) => (
-                                <React.Fragment key={i}>
-                                    <div>
-                                        <img src={fileIcon} className="icon" alt="" />
-                                        <p>{documentName(key)}</p>
-                                    </div>
-                                    <a href={file[key].url}>{file[key].fileName}</a>
-                                </React.Fragment>
-                            ))}
-                            <div>
-                                <Button className={"btn-icon"} icon={edit}/>
-                                <Button className={"btn-icon"} icon={bin}/>
-                            </div>
-                        </div>))
-                    : <h3>Ingen dokumenter</h3>
-                }
+                <DocumentsList />
+                <form id="add-file" ref={formRef}>
+                    <Input type="file" id="add-file" label="Legg til dokument" />
+                    <Button text="Legg til dokument" className="pc-400" onClick={(e) => handleSaveFile(e)}/>
+                </form>
             </div>
         )
     }
@@ -232,7 +255,7 @@ const CandidateProfile = ({candidate, closeDialog}) => {
             let data = new FormData(formRef.current)
             let formObject = Object.fromEntries(data.entries())
 
-            addDialog(id, formObject)
+            updateDocArray("dialogs", id, [formObject])
             getDialogs()
         }
 
@@ -280,7 +303,6 @@ const CandidateProfile = ({candidate, closeDialog}) => {
                 </li>
             </ul>
             <section>
-                {/* <Header /> */}
                 <div className="info-container">
                     {view === "Oversikt"
                         ? <Overview />
@@ -289,12 +311,6 @@ const CandidateProfile = ({candidate, closeDialog}) => {
                             : <Dialogs />
                     }
                 </div>
-                { view === "Oversikt" && 
-                    <div className="text-container">
-                        <h3>Kommentar</h3>
-                        <p>{comments}</p>
-                    </div>
-                }
             </section>
         </div>
     )
