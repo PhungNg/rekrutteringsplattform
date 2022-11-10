@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import { useEffect } from 'react';
 import upload from '../../Icons/upload.png'
 
 import './index.scss';
@@ -7,6 +6,7 @@ import './index.scss';
 const Input = ({
     className,
     children,
+    checked,
     defaultValue,
     disabled,
     icon,
@@ -21,19 +21,19 @@ const Input = ({
     const uploadContainer = useRef(null);
 
     const attrs = {
-        type: type ? type : "text",
-        id,
-        name: id,
-        placeholder,
-        rows,
+        checked,
         defaultValue,
         disabled: disabled || null,
-        onChange: onChange ? (e)=>onChange(e, true) : null
+        id,
+        name: id,
+        onChange: onChange || null,
+        placeholder,
+        rows,
+        type: type ? type : "text"
     }
 
     const FileTemplate = () => {
         const [fileName, setFileName] = useState()
-
         const dropHandler = (e) => {
             const dt = e.dataTransfer
             const files = dt.files
@@ -41,10 +41,9 @@ const Input = ({
         }
         
         const changeHandler = (e) => {
-            if(onChange) onChange(e, true)
             setFileName(e.target.value.split('\\').pop())
         }
-
+    
         const dragEnterHandler = () => {
             uploadContainer.current.classList.add("active")
         }
@@ -52,10 +51,6 @@ const Input = ({
         const dragLeaveHandler = () => {
             uploadContainer.current.classList.remove("active")
         }
-
-        useEffect(()=>{
-            if(onChange) onChange(null, true)
-        },[fileName])
 
         return (
             <div ref={uploadContainer} className="upload-container">
@@ -109,7 +104,8 @@ const Input = ({
                         ? <textarea {...attrs} rows={rows}></textarea>
                         : className === "search"
                             ? <SearchTemplate />
-                            : <input {...attrs} />
+                            : <input {...attrs}/>
+                         
             }
         </div>
     )

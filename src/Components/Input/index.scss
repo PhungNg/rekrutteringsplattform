@@ -122,4 +122,13 @@
             }
         }
     }
+
+    &.checkbox {
+        flex-direction: row;
+        justify-content: space-between;
+
+        input {
+            cursor: pointer;
+        }
+    }
 }  
