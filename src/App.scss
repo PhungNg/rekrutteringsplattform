@@ -17,6 +17,7 @@
       width: 1.25rem;
     }
   }
+
   .candidates {
     position: relative;
     margin-top: 2.5rem;
@@ -30,25 +31,70 @@
   }
 
   .filter {
-    display: flex;
-  }
-
-  .search-box {
-    position: absolute;
-    display: flex;
-    top: 1.5rem;
-    height: 2rem;
-    width: 15rem;
-    right: 0;
-    padding: 2px 0.5rem;
-    margin-right: 1.5rem;
-    border: 1px solid $grayscale-color-200;
-    border-radius: 4px;
-    align-items: center;
+    // display: flex;
+    div {
+      display: flex;
+    }
   }
 
   .search-input {
     all: unset;
     margin-left: 0.5rem;
+  }
+}
+
+.dropdown {
+  position: relative;
+
+  .dropdown-btn {
+    margin-top: 0;
+  }
+
+  .header {
+    margin: 0.25rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid $grayscale-color-200;
+
+    h5 {
+      margin: 0;
+    }
+  }
+
+  .content {
+    position: absolute;
+    display: none;
+    width: 15rem;
+    max-height: 17rem;
+    right: 0;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    background-color: #ffffff;
+    border: 1px solid $grayscale-color-200;
+    overflow-y: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 6px 1px #cccccc;
+
+    &.open {
+      display: block;
+    }
+
+    .clear-filter-btn {
+      width: auto;
+      min-height: auto;
+      padding: 0;
+      margin: 0;
+      border: none;
+      color: $primary-color-core;
+      font-size: 14px;
+      font-weight: 300;
+
+      &:active {
+        color: #551A8B;
+      }
+    }
+
+    input {
+      min-height: 1.5rem;
+    }
   }
 }

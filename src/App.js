@@ -21,13 +21,13 @@ function App() {
   
   const fetchData = useCallback(async () => {
     const response = await getCandidates()
-    setCandidates(candidates => candidates = response)
+    setCandidates(response)
   },[])
   
-  const handelCloseDialog = useCallback((bool) => {
+  const handelCloseDialog = useCallback(() => {
+
     fetchData()
     setOpenDialog(null)
-    return bool
   },[fetchData])
 
   useEffect(()=>{
@@ -58,13 +58,13 @@ function App() {
     if(openDialog === "profile") {
       attrs = {...attrs,
         header: `${candidateProfile.firstname} ${candidateProfile.lastname}`,
-        content: <CandidateProfile candidate={candidateProfile} closeDialog={handelCloseDialog}/>
+        content: <CandidateProfile candidate={candidateProfile} id={candidateProfile.id} closeDialog={handelCloseDialog}/>
       }
     }
     
     if(openDialog === "form"){
       attrs = {...attrs,
-        header: formStep < 3 ? `Legg til ny kandidata (${formStep}/2)` : null,
+        header: formStep < 3 && `Legg til ny kandidata (${formStep}/2)`,
         formStep: formStep,
         content: <NewCandidateForm closeDialog={handelCloseDialog} setFormStep={handelFormStep} formStep={formStep}/>
       }      
@@ -73,8 +73,11 @@ function App() {
     return (<DialogComp {...attrs}/>)
   }
   
-  const Filter = () => {
-    const filterBtns = ["Alle kandidater", "Arkitektur", "Experience", "Test og prosjekt", "Utvikling"]
+  const FilterButtons = () => {
+    const filterBtns = [
+      {department: ["Alle kandidater", "Arkitektur", "Experience", "Test og prosjekt", "Utvikling"]},
+      {status: ["Ikke kontaktet", "Kontaktet", "Til 1. intervju", "Til 2. intervju", "Tilbud sendt", "Tilbud godtatt", "Ikke aktuell"]}
+    ]
 
     const handelFilter = async (field, value) => {
       setCurrentSelected(value)
@@ -82,11 +85,20 @@ function App() {
       if(value === "Alle kandidater") return fetchData()
       setCandidates(await filter(field, value))
     }
-
+      
     return (
       <div className="filter">
-        {filterBtns.map((value, key) => (
-            <Button key={key} text={value} onClick={()=>handelFilter("department", value)} className={currentSelected === value ? "pc-400" : ""}/>
+        {filterBtns.map((field, key) => (
+          <div key={key}>
+            {Object.entries(field).map(([key, buttons]) => (
+              buttons.map((value, i) => (
+                <Button key={field+i}
+                className={currentSelected === value && "pc-400"}
+                text={value}
+                onClick={()=>handelFilter(key, value)}/>
+              ))
+            ))}
+          </div>
         ))}
       </div>
     )
@@ -109,6 +121,72 @@ function App() {
     setCandidates([...candidates.sort(compare)] )
   }
 
+  const CandidateList = () => {
+    const Dropdown = () => {
+      const [ isOpen, setIsOpen ] = useState(true)
+      // const [ leaders, setLeaders ] = useState(["Joakim"])
+
+      // const getLeaders = useCallback(() => {
+      //   let data = []
+      //   candidates.forEach(({leader}) => {
+      //     console.log("leader", leader)
+      //     if(!leaders.includes(leader)) {
+      //       console.log("fins ikke")
+      //       // setLeaders(leader => [...leader, leader])
+      //       data.push(leader)
+      //     }else {
+      //       console.log("fins")
+      //     }
+      //   })
+      //   console.log(data)
+      // },[leaders])
+
+      // useEffect(() => {
+      //   getLeaders()
+      // },[getLeaders])
+
+      const handelCheck = async(e) => {
+        if(e.target.checked) {
+          setCandidates(await filter("leader", e.target.value))
+        }
+      }
+      
+      // const CheckboxValues = () => {
+      //   console.log(leaders)
+      //   return (
+      //     <div>{leaders.map((leader) => <div>{leader}</div>)}</div>        
+      //   )
+      // }
+
+      return (
+        <div className="dropdown">
+          <Button text="Filter" icon={funnel} className="dropdown-btn" onClick={()=>setIsOpen(!isOpen)}/>
+          <div className={`content${isOpen ? " open" : ""}`}>
+            <section className="header d-flex justify-content-between align-items-center">
+              <h5>Ansvarlig</h5>
+              <Button text="Fjern alle" className="clear-filter-btn"/>
+            </section>
+            {/* <CheckboxValues /> */}
+            <Input id="joakim" type="checkbox" label="Joakim" defaultValue="Joakim" className={`checkbox`} onChange={handelCheck} onClick={(e)=>e.target.checked ? true : false}/>
+            <Input id="kaisa" type="checkbox" label="Kaisa" defaultValue="Kaisa" className={"checkbox"} onChange={handelCheck} />
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <section className="candidates">
+        <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort}>
+          <h2>Alle kandidater</h2>
+            <div className="d-flex">
+            <Input placeholder="Søk" icon={search} className="search" id="search"/>
+            <Dropdown />
+          </div>
+        </Table>
+      </section>
+    )
+  }
+
   return (
     <div className="App">
       <header>
@@ -116,12 +194,8 @@ function App() {
         <Button text="Legg til ny kandidat" icon={plus} className={"pc-400"} onClick={() => handelOpenDialog("form")}/>
       </header>
       <main>
-        <Filter />
-        <section className="candidates">
-            <Input placeholder="Søk" icon={search}/>
-          <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort}/>
-        </section>
-
+        <FilterButtons />
+        <CandidateList />
         <Dialog />
       </main>
     </div>
