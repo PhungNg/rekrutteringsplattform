@@ -130,11 +130,13 @@ export const filter = async (field, value) => {
   let filterList = []
 
   const querySnapshot = await getDocs(q)
+
   querySnapshot.forEach((doc) => {
     let data = doc.data()
     data.id = doc.id
     filterList.push(data)
   })
+  
   return filterList
 }
 

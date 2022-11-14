@@ -28,15 +28,12 @@
     }
     
     &.search {
-        display: flex;
         flex-direction: row;
         width: 15rem;
-        min-height: 2.5rem;
         padding: 2px 0.5rem;
-        margin-right: 1.5rem;
+        margin-right: 0.5rem;
         border: 1px solid $grayscale-color-200;
         border-radius: 4px;
-        align-items: center;
 
         &:focus-within {
             outline: auto;
@@ -46,10 +43,9 @@
             width: 100%;
             
             input {
-                width: 100%;
                 margin-top: 0;
                 border: none;
-                
+
                 &:focus {
                     outline: none;
                 }
