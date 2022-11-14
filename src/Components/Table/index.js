@@ -1,9 +1,8 @@
 import React from "react";
-import { sort, funnel, search } from "../../Icons"
-import { Input, Button } from "../index"
+import { sort } from "../../Icons"
 import './index.scss';
 
-const Table = ({ candidates, onClick, handelSort, children }) => {
+const Table = ({ candidates, onClick, handelSort }) => {
     const headers = [
         {
             title: "Navn",
@@ -82,9 +81,6 @@ const Table = ({ candidates, onClick, handelSort, children }) => {
 
     return (
         <table className="table">
-            <caption>
-                {children}
-            </caption>
             <thead>
                 <tr>
                     {headers.map(({title, name, classname}, key) => 
