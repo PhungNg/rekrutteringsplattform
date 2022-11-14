@@ -3,7 +3,7 @@ import {
   Button,
   CandidateProfile ,
   Dialog as DialogComp,
-  Dropdown,
+  Dropdown as DropdownComp,
   Input,
   NewCandidateForm,
   Table
@@ -22,6 +22,7 @@ function App() {
   
   const fetchData = useCallback(async () => {
     setCandidates(await getCandidates())
+    setCurrentSelected("Alle kandidater")
   },[])
   
   const handelCloseDialog = useCallback(() => {
@@ -134,8 +135,7 @@ function App() {
     createCheckboxList()
   },[createCheckboxList])
 
-  const Drop = () => {
-
+  const Dropdown = () => {
     const handelOnChange = (e) => {
       setCheckboxes(prevState => {
         return prevState.map(obj => {
@@ -155,11 +155,12 @@ function App() {
     }
     
     return (
-      <Dropdown checkboxList={checkboxes} handelOnChange={handelOnChange} />
+      <DropdownComp checkboxList={checkboxes} handelOnChange={handelOnChange} />
       )
     }
-    
+
   const filterResults = useCallback(async() => {
+    setCurrentSelected("Alle kandidater")
     let queryResults = async() => {
       let tempArr = []
       
@@ -190,7 +191,7 @@ function App() {
           <div className="d-flex">
             <h2>Alle kandidater</h2>
             <Input placeholder="Søk" icon={search} className="search" id="search"/>
-            <Drop />
+            <Dropdown />
           </div>
           <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort} />
         </section>
