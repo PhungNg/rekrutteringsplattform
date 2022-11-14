@@ -8,8 +8,8 @@ import {
   NewCandidateForm,
   Table
 } from './Components/';
-import { funnel, search } from './Icons';
-import { getCandidates, filter } from './Firebase/firebaseConfig';
+import { search } from './Icons';
+import { getCandidates, queryCandidates } from './Firebase/firebaseConfig';
 import './App.scss';
 import './utilities.scss';
 import { plus } from './Icons';
@@ -21,12 +21,10 @@ function App() {
   const [ currentSelected, setCurrentSelected ] = useState("Alle kandidater")
   
   const fetchData = useCallback(async () => {
-    const response = await getCandidates()
-    setCandidates(response)
+    setCandidates(await getCandidates())
   },[])
   
   const handelCloseDialog = useCallback(() => {
-
     fetchData()
     setOpenDialog(null)
   },[fetchData])
@@ -84,7 +82,7 @@ function App() {
       setCurrentSelected(value)
       
       if(value === "Alle kandidater") return fetchData()
-      setCandidates(await filter(field, value))
+      setCandidates(await queryCandidates(field, value))
     }
       
     return (
@@ -123,6 +121,7 @@ function App() {
   }
   
   const [checkboxes, setCheckboxes] = useState([])
+  const [filterQuery, setFilterQuery] = useState([])
 
   const createCheckboxList = useCallback(async() => {
     let data = await getCandidates()
@@ -137,7 +136,7 @@ function App() {
 
   const Drop = () => {
 
-    const handelOnChange = async(e) => {
+    const handelOnChange = (e) => {
       setCheckboxes(prevState => {
         return prevState.map(obj => {
           if(obj.name === e.target.value) {
@@ -147,27 +146,38 @@ function App() {
         })
       })
 
-      // setCandidates(await filter("leader", e.target.value))
+      setFilterQuery((filterQuery) => {
+        if(e.target.checked) {
+          return [...filterQuery, e.target.value]
+        }
+        return filterQuery.filter(name => name !== e.target.value)
+      })
     }
-
-    useEffect(()=> {
-      let arr = []
-      if(checkboxes.filter(box => box.checked === true)) {
-        let checked = checkboxes.map(box => {
-          
-        })
-        console.log(checked)
-        
-        checked.forEach(async({name}) => arr.push(await filter("leader", name)))
-        // console.log(filt)
-      }
-    },[checkboxes])
-
+    
     return (
       <Dropdown checkboxList={checkboxes} handelOnChange={handelOnChange} />
-    )
-  }
+      )
+    }
+    
+  const filterResults = useCallback(async() => {
+    let queryResults = async() => {
+      let tempArr = []
+      
+      for(let i = 0; i < filterQuery.length; i++) {
+        let arr = await queryCandidates("leader", filterQuery[i])
+        arr.map(el => tempArr.push(el))
+      }
+      return tempArr
+    }
+    setCandidates(await queryResults())
+  },[filterQuery])
 
+  useEffect(() => {
+    filterQuery.length > 0
+      ? filterResults()
+      : fetchData()
+  },[checkboxes, fetchData, filterQuery.length, filterResults])
+    
   return (
     <div className="App">
       <header>

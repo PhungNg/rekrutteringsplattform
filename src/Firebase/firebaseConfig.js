@@ -74,7 +74,7 @@ export const addCandidate = async ({
         console.error("Error adding document: ", e)
     }
 }
-// acquaintance, company, department, followUpTime, leader, mail, phonenumber, role, status, yearsOfExperience
+
 export const updateCandidates = async (id, data) => {
   for (const key in data) {
     await setDoc(doc(db, "candidates", id), {
@@ -115,8 +115,6 @@ export const deleteFile = (folder, fileName) => {
     deleteObject(candidateRef)
 }
 
-// export delete
-
 export const updateDocArray = async (key, id, value, remove) => {
   value.forEach(obj => {
     updateDoc(doc(db, "candidates", id), {
@@ -125,7 +123,7 @@ export const updateDocArray = async (key, id, value, remove) => {
   })
 }
 
-export const filter = async (field, value) => {
+export const queryCandidates = async (field, value) => {
   const q = query(collection(db, "candidates"), where(field, "==", value))
   let filterList = []
 
@@ -136,12 +134,10 @@ export const filter = async (field, value) => {
     data.id = doc.id
     filterList.push(data)
   })
-  
   return filterList
 }
 
 export const getCandidate = async id => {
-  // const docRef = doc(db, "candidates", id)
   const response = await getDoc(doc(db, "candidates", id))
   return response.data()
 }
