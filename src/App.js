@@ -3,6 +3,7 @@ import {
   Button,
   CandidateProfile ,
   Dialog as DialogComp,
+  Dropdown,
   Input,
   NewCandidateForm,
   Table
@@ -120,70 +121,50 @@ function App() {
     }
     setCandidates([...candidates.sort(compare)] )
   }
+  
+  const [checkboxes, setCheckboxes] = useState([])
 
-  const CandidateList = () => {
-    const Dropdown = () => {
-      const [ isOpen, setIsOpen ] = useState(true)
-      // const [ leaders, setLeaders ] = useState(["Joakim"])
+  const createCheckboxList = useCallback(async() => {
+    let data = await getCandidates()
+    const leaders = data.map(({leader}) => leader)
+    let uniq = [...new Set(leaders)].map(name => ({name: name, checked: false}))
+    setCheckboxes(uniq)
+  },[])
+  
+  useEffect(()=>{
+    createCheckboxList()
+  },[createCheckboxList])
 
-      // const getLeaders = useCallback(() => {
-      //   let data = []
-      //   candidates.forEach(({leader}) => {
-      //     console.log("leader", leader)
-      //     if(!leaders.includes(leader)) {
-      //       console.log("fins ikke")
-      //       // setLeaders(leader => [...leader, leader])
-      //       data.push(leader)
-      //     }else {
-      //       console.log("fins")
-      //     }
-      //   })
-      //   console.log(data)
-      // },[leaders])
+  const Drop = () => {
 
-      // useEffect(() => {
-      //   getLeaders()
-      // },[getLeaders])
+    const handelOnChange = async(e) => {
+      setCheckboxes(prevState => {
+        return prevState.map(obj => {
+          if(obj.name === e.target.value) {
+            return {...obj, checked: e.target.checked}
+          }
+          return obj
+        })
+      })
 
-      const handelCheck = async(e) => {
-        if(e.target.checked) {
-          setCandidates(await filter("leader", e.target.value))
-        }
-      }
-      
-      // const CheckboxValues = () => {
-      //   console.log(leaders)
-      //   return (
-      //     <div>{leaders.map((leader) => <div>{leader}</div>)}</div>        
-      //   )
-      // }
-
-      return (
-        <div className="dropdown">
-          <Button text="Filter" icon={funnel} className="dropdown-btn" onClick={()=>setIsOpen(!isOpen)}/>
-          <div className={`content${isOpen ? " open" : ""}`}>
-            <section className="header d-flex justify-content-between align-items-center">
-              <h5>Ansvarlig</h5>
-              <Button text="Fjern alle" className="clear-filter-btn"/>
-            </section>
-            {/* <CheckboxValues /> */}
-            <Input id="joakim" type="checkbox" label="Joakim" defaultValue="Joakim" className={`checkbox`} onChange={handelCheck} onClick={(e)=>e.target.checked ? true : false}/>
-            <Input id="kaisa" type="checkbox" label="Kaisa" defaultValue="Kaisa" className={"checkbox"} onChange={handelCheck} />
-          </div>
-        </div>
-      )
+      // setCandidates(await filter("leader", e.target.value))
     }
 
+    useEffect(()=> {
+      let arr = []
+      if(checkboxes.filter(box => box.checked === true)) {
+        let checked = checkboxes.map(box => {
+          
+        })
+        console.log(checked)
+        
+        checked.forEach(async({name}) => arr.push(await filter("leader", name)))
+        // console.log(filt)
+      }
+    },[checkboxes])
+
     return (
-      <section className="candidates">
-        <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort}>
-          <h2>Alle kandidater</h2>
-            <div className="d-flex">
-            <Input placeholder="Søk" icon={search} className="search" id="search"/>
-            <Dropdown />
-          </div>
-        </Table>
-      </section>
+      <Dropdown checkboxList={checkboxes} handelOnChange={handelOnChange} />
     )
   }
 
@@ -195,8 +176,16 @@ function App() {
       </header>
       <main>
         <FilterButtons />
-        <CandidateList />
+        <section className="candidates">
+          <div className="d-flex">
+            <h2>Alle kandidater</h2>
+            <Input placeholder="Søk" icon={search} className="search" id="search"/>
+            <Drop />
+          </div>
+          <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort} />
+        </section>
         <Dialog />
+
       </main>
     </div>
   );
