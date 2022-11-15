@@ -17,8 +17,9 @@ import { plus } from './Icons';
 function App() {
   const [ candidateProfile, setCandidateProfile ] = useState(false)
   const [ candidates, setCandidates ] = useState([])
-  const [ openDialog, setOpenDialog ] = useState()
   const [ currentSelected, setCurrentSelected ] = useState("Alle kandidater")
+  const [ dropdownIsOpen, setDropDownIsOpen ] = useState(false)
+  const [ openDialog, setOpenDialog ] = useState()
   
   const fetchData = useCallback(async () => {
     setCandidates(await getCandidates())
@@ -134,8 +135,9 @@ function App() {
   useEffect(()=>{
     createCheckboxList()
   },[createCheckboxList])
-
+  
   const Dropdown = () => {
+
     const handelOnChange = (e) => {
       setCheckboxes(prevState => {
         return prevState.map(obj => {
@@ -152,15 +154,26 @@ function App() {
         }
         return filterQuery.filter(name => name !== e.target.value)
       })
+
+    }
+
+    const handelOpenClose = () => {
+      setDropDownIsOpen(!dropdownIsOpen)
     }
     
     return (
-      <DropdownComp checkboxList={checkboxes} handelOnChange={handelOnChange} />
+      <DropdownComp
+        checkboxList={checkboxes}
+        isOpen={dropdownIsOpen}
+        handelOpenClose={handelOpenClose}
+        handelOnChange={handelOnChange} />
       )
     }
 
   const filterResults = useCallback(async() => {
     setCurrentSelected("Alle kandidater")
+    setDropDownIsOpen(true)
+    
     let queryResults = async() => {
       let tempArr = []
       
