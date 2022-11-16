@@ -15,7 +15,7 @@ import {
   where,
   arrayRemove
 } from "firebase/firestore";
-import { getAuth, OAuthProvider, signOut, signInWithEmailAndPassword } from "firebase/auth"
+import { getAuth, OAuthProvider, signOut, signInWithPopup } from "firebase/auth"
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -38,14 +38,10 @@ const db = getFirestore(app);
 
 export const auth = getAuth(app);
 
-// const authProvider = new OAuthProvider('microsoft.com');
-// authProvider.setCustomParameters({
-//     // Force re-consent.
-//   // prompt: 'consent',
-//     // Only accept logins from this domain/tenant.
-//   tenant: 'aboveit.no'
-// });
-
+const authProvider = new OAuthProvider('microsoft.com');
+authProvider.setCustomParameters({
+  tenant: 'aboveit.no'
+});
 
 export const addCandidate = async ({
   firstname,
@@ -133,6 +129,10 @@ export const updateDocArray = async (key, id, value, remove) => {
   })
 }
 
+export const updateField = async (id, value) => {
+    updateDoc(doc(db, "candidates", id), value)    
+}
+
 export const queryCandidates = async (field, value) => {
   const q = query(collection(db, "candidates"), where(field, "==", value))
   let filterList = []
@@ -165,15 +165,18 @@ export const getCandidates = async () => {
   return candidates
 }
 
-export const signIn = (email, password) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredentials) => {
-      const user = userCredentials.user
+export const signIn = () => {
+  signInWithPopup(auth, authProvider)
+    .then((result) => {
+        const credential = OAuthProvider.credentialFromResult(result);
+        const accessToken = credential?.accessToken;
+        const idToken = credential?.idToken;
     })
     .catch((error) => {
-      console.log(error.code,": ", error.message)
-    })
+        console.log(error)
+    });
 }
+
 export const signOutUser = () => {
   signOut(auth).then(()=> {
     console.log("Logged out")

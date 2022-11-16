@@ -249,7 +249,7 @@ function App() {
   });
 
   const handelSignIn = () => {
-    signIn("mail@mail.com","123pass")
+    signIn()
   }
 
   const handelSignOut = () => {
