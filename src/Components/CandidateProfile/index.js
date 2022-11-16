@@ -15,7 +15,7 @@ import {
 import Button from '../Button'
 import Input from '../Input'
 import Accordion from '../Accordion'
-import { updateDocArray, getCandidate, deleteCandidate, deleteFile, updateCandidates, uploadFiles } from '../../Firebase/firebaseConfig'
+import { updateDocArray, getCandidate, deleteCandidate, deleteFile, updateCandidates, uploadFiles } from '../../Firebase/config'
 import './index.scss';
 
 const CandidateProfile = ({closeDialog, id}) => {
@@ -28,6 +28,12 @@ const CandidateProfile = ({closeDialog, id}) => {
         const [ editInfo, setEditInfo ] = useState(false)
         const [ candidate, setCandidate ] = useState({})
         const formRef = useRef(null)
+
+        for(const key in candidate) {
+            if(candidate[key] === "") {
+                if(key !== "followUpTime") candidate[key] = "TBD"
+            }
+        }
 
         const {
             acquaintance, 
@@ -170,7 +176,7 @@ const CandidateProfile = ({closeDialog, id}) => {
                         <Input disabled={!editInfo} onChange={handelOnChange} label="Bekjentskap" icon={chain} id="acquaintance" defaultValue={acquaintance} />
                         <Input disabled={!editInfo} onChange={handelOnChange} label="Telefon" icon={phone} id="phonenumber" defaultValue={phonenumber} />
                         <Input disabled={!editInfo} onChange={handelOnChange} label="Epost" icon={mailIcon} id="mail" defaultValue={mail}/>
-                        <Input disabled={!editInfo} onChange={handelOnChange} label="Oppfølging" icon={calendar} id="followUpTime" defaultValue={followUpTime} />
+                        <Input disabled={!editInfo} onChange={handelOnChange} label="Oppfølging" icon={calendar} id="followUpTime" defaultValue={followUpTime} type="date"/>
                     </div>
                 </form>
                 <div className="text-container">

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { addCandidate } from '../../Firebase/firebaseConfig'
-import { uploadFiles } from '../../Firebase/firebaseConfig'
+import { addCandidate } from '../../Firebase/config'
+import { uploadFiles } from '../../Firebase/config'
 import Button from '../Button'
 import Input from '../Input'
 
