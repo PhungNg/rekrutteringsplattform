@@ -14,6 +14,7 @@ const Input = ({
     label,
     onChange,
     placeholder,
+    required,
     rows,
     textarea,
     type }) => {
@@ -28,6 +29,7 @@ const Input = ({
         name: id,
         onChange: onChange || null,
         placeholder,
+        required,
         rows,
         type: type ? type : "text"
     }
