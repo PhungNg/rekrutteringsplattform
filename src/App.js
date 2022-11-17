@@ -14,19 +14,22 @@ import './App.scss';
 import './utilities.scss';
 import { plus } from './Icons';
 import { auth, signIn, signOutUser } from "./Firebase/config";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
   const [ candidateProfile, setCandidateProfile ] = useState(false)
   const [ candidates, setCandidates ] = useState([])
+  const [ candidatesCopy, setCandidatesCopy ] = useState([])
   const [ currentDepartmentSelected, setCurrentDepartmentSelected ] = useState("Alle avdelinger")
   const [ currentStatusSelected, setCurrentStatusSelected ] = useState("Alle statuser")
   const [ dropdownIsOpen, setDropDownIsOpen ] = useState(false)
+  const [ filter, setFilter ] = useState({})
   const [ openDialog, setOpenDialog ] = useState()
   const [ uid, setUid ] = useState()
   
   const fetchData = useCallback(async () => {
     setCandidates(await getCandidates())
+    setCandidatesCopy(await getCandidates())
     setCurrentDepartmentSelected("Alle avdelinger")
     setCurrentStatusSelected("Alle statuser")
   },[])
@@ -78,53 +81,23 @@ function App() {
 
     return (<DialogComp {...attrs}/>)
   }
-  
+
   const FilterButtons = () => {
     const filterBtns = [
       {department: ["Alle avdelinger", "Arkitektur", "Experience", "Test og prosjekt", "Utvikling"]},
       {status: ["Alle statuser", "Ikke kontaktet", "Kontaktet", "Til 1. intervju", "Til 2. intervju", "Tilbud sendt", "Tilbud godtatt", "Ikke aktuell"]}
     ]
-
-    const handelFilter = (field, value) => {
-      field === "department"
+    
+    const handelFilter = (key, value) => {
+      key === "department"
         ? setCurrentDepartmentSelected(value)
         : setCurrentStatusSelected(value)
-
-      if(checkboxes.find(checkbox => checkbox.checked)) {
-        const reset = checkboxes.map(checkbox => {
-          checkbox.checked = false
-          return checkbox
-        })
-        setCheckboxes(reset)
-      }
       
-      if(value === "Alle avdelinger") {
-        return setFilterQuery(filterQuery => filterQuery.filter(query => query.field === "status"))
-      }else if(value === "Alle statuser") {
-        return setFilterQuery(filterQuery => filterQuery.filter(query => query.field === "department"))
-      }
-
-      setFilterQuery((filterQuery) => {        
-        if(filterQuery.find(query => query.field === field)) {
-          return filterQuery.map(query => {
-            if(query.field === (field === "department" ? "department" : "status")) {
-              return {...query, value: value}
-            }else {
-              return query
-            }
-          })
-        }else {
-          const queryList = filterQuery.filter(query => query.field === (field === "department" ? "status" : "department"));
-          if(queryList.length > 0) {
-            queryList.push({field: field, value: value})
-            return queryList
-          }else {
-            return [{field: field, value: value}]
-          }
-        }
-      })
+      value === "Alle avdelinger" || value === "Alle statuser"
+        ? setFilter({...filter, [key]: null})
+        : setFilter({...filter, [key]: value})
     }
-      
+
     return (
       <div className="filter">
         {filterBtns.map((field, key) => (
@@ -132,8 +105,8 @@ function App() {
             {Object.entries(field).map(([key, buttons]) => (
               buttons.map((value, i) => (
                 <Button key={field+i}
-                className={(currentDepartmentSelected === value || currentStatusSelected === value) && "pc-400"}
                 text={value}
+                className={(currentDepartmentSelected === value || currentStatusSelected === value) && "pc-400"}
                 onClick={()=>handelFilter(key, value)}/>
               ))
             ))}
@@ -142,6 +115,23 @@ function App() {
       </div>
     )
   }
+  
+  useEffect(() => {
+    if(filter.department || filter.status) {
+      console.log(filter)
+      if(filter.department && filter.status) {
+        setCandidates(candidatesCopy.filter(candidate =>
+          candidate.department === filter.department && candidate.status === filter.status
+        ))
+      } else {
+        filter.status
+          ? setCandidates(candidatesCopy.filter(candidate => candidate.status === filter.status))
+          : setCandidates(candidatesCopy.filter(candidate => candidate.department === filter.department))
+      }
+    } else {
+      setCandidates(candidatesCopy)
+    }
+  },[candidatesCopy, filter])
 
   const handelSort = (column) => {
     const compare = (a,b) => {
@@ -189,30 +179,26 @@ function App() {
         if(e.target.checked) {
           return [...filterQuery, {value: e.target.value, field: "leader"}]
         }
-        return filterQuery.filter(obj => obj.value !== e.target.value && obj.field === "leader")
+        return filterQuery.filter(query => query.value !== e.target.value)
       })
-
     }
 
-    const handelOpenClose = () => {
-      setDropDownIsOpen(!dropdownIsOpen)
-    }
-    
     return (
       <DropdownComp
         checkboxList={checkboxes}
         isOpen={dropdownIsOpen}
-        handelOpenClose={handelOpenClose}
+        handelOpenClose={() => setDropDownIsOpen(!dropdownIsOpen)}
         handelOnChange={handelOnChange} />
-      )
-    }
+    )
+  }
 
   const filterResults = useCallback(async() => {
     if(checkboxes.find(checkboxes => checkboxes.checked)) {
       setCurrentDepartmentSelected("Alle avdelinger")
       setCurrentStatusSelected("Alle statuser")
+      setFilter({})
     }
-
+    console.log(filterQuery)
     let queryResults = async() => {
       let tempArr = []
       for(let i = 0; i < filterQuery.length; i++) {
@@ -235,7 +221,7 @@ function App() {
     filterQuery.length > 0
       ? filterResults()
       : fetchData()
-  },[checkboxes, fetchData, filterQuery, filterResults])
+  },[fetchData, filterQuery, filterResults])
 
   onAuthStateChanged(auth, (user) => {
     if (user && !uid) {
@@ -248,13 +234,16 @@ function App() {
       }
   });
 
-  const handelSignIn = () => {
-    signIn()
-  }
-
   const handelSignOut = () => {
     signOutUser()
   }
+  
+  const SignIn = () => (
+      <section id="sign-in">
+        <h1>Rekrutteringsplattform</h1>
+        <Button text="Logg inn" className="pc-400" onClick={signIn}/>
+      </section>
+  )
 
   return (
     <div className="App">
@@ -278,7 +267,7 @@ function App() {
             <button onClick={handelSignOut}>Logout</button>
           </main>
         </>
-        : <button onClick={handelSignIn}>Login in</button>
+        : <SignIn />
     }
     </div>
   );
