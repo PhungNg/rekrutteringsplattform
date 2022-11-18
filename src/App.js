@@ -258,7 +258,7 @@ function App() {
             <section className="candidates">
               <div className="d-flex">
                 <h2>Alle kandidater</h2>
-                <Input placeholder="Søk" icon={search} className="search" id="search"/>
+                {/* <Input placeholder="Søk" icon={search} className="search" id="search"/> */}
                 <Dropdown />
               </div>
               <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort} />

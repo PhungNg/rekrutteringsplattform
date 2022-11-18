@@ -3,13 +3,24 @@
 .accordion {
     position: relative;
     display: flex;
-    flex-direction: column;
     min-height: 4.5rem;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     align-items: center;
     background-color: $grayscale-color-50;
     border-radius: 4px;
+
+    > div {
+        &:first-child {
+            width: 100%;
+        }
+    }
+
+    .edit-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 
     .accordion-header {
         all: unset;
@@ -19,8 +30,11 @@
         min-height: 4rem;
         cursor: pointer;
 
-        > div {
-            margin-left: 1rem;
+        > div,
+        form {
+            width: 100%;
+            margin-left: 0.75rem;
+
             span {
                 font-size: 1.25rem;
                 font-weight: 500;
@@ -28,18 +42,25 @@
             }
             
             > div {
-                margin-top: 1rem;
+                margin-top: 0.5rem;
                 display: flex;
+
+                .input-container {
+                    width: 100%;
+                }
 
                 small {
                     margin-right: 1rem;
+                }
+
+                .btn {
+                    margin-left: auto;
                 }
             }
         }
 
         img {
-        transition: transform 0.3s;
-
+            transition: transform 0.3s;
             width: 1rem;
             height: 1rem;
             margin-right: 0.25rem;
@@ -58,14 +79,20 @@
         }
     }
 
-    &.title-only {
-        .accordion-header {
-            // margin-top: 1rem;
-        }
+    .btn-container {
+        display: flex;
+        margin-bottom: auto;
+    }
+
+    &.form {
         .accordion-body {
             padding: 0;
             background-color: $grayscale-color-50;
             border: none;
+        }
+
+        > .btn {
+            display: none;
         }
     }
 
@@ -85,24 +112,30 @@
             font-weight: bold;
         }
 
-        form {
-            width: 100%;
-
-            fieldset {
-                border: none;
-                padding: 0;
-
-                > div:first-child {
-                    display: grid;
-                    gap: 0.5rem;
-                    grid-template-columns: 1fr 1fr 1fr;
-                    margin: 1rem 0;
-                }
-
-                .btn {
-                    margin-top: 1rem;
-                }                
+        .btn {
+            &.danger {
+                margin-left: auto;
             }
+        }
+    }
+
+    form {
+        width: 100%;
+
+        fieldset {
+            border: none;
+            padding: 0;
+
+            > div:first-child {
+                display: grid;
+                gap: 0.5rem;
+                grid-template-columns: 1fr 1fr 1fr;
+                margin-bottom: 1rem;
+            }
+
+            .btn {
+                margin-top: 1rem;
+            }                
         }
     }
 
