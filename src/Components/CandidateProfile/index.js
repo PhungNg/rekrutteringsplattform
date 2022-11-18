@@ -4,7 +4,6 @@ import {
     calendar,
     chain,
     clock,
-    edit,
     file as fileIcon,
     home,
     key,
@@ -84,7 +83,7 @@ const CandidateProfile = ({closeDialog, id}) => {
                         setCurrentData(currentData => ({...currentData, [key]: currentData[key]}))
                     }
                 }
-                console.log(updatedData)
+
                 updateCandidates(id, updatedData)
                 setEditInfo(false)
                 setChange(false)

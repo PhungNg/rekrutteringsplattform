@@ -21,7 +21,6 @@ const Accordion = ({ classname, title, date, place, summary, form, id, deleteDia
 
     useEffect(()=> {
         if(classname === "add") {
-            console.log(2)
             setAccBtnIcon(plusBlack)
         }else {
             setAccBtnIcon(accordionDown)

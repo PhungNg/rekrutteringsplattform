@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Button,
   CandidateProfile ,
@@ -118,7 +118,6 @@ function App() {
   
   useEffect(() => {
     if(filter.department || filter.status) {
-      console.log(filter)
       if(filter.department && filter.status) {
         setCandidates(candidatesCopy.filter(candidate =>
           candidate.department === filter.department && candidate.status === filter.status
@@ -198,7 +197,7 @@ function App() {
       setCurrentStatusSelected("Alle statuser")
       setFilter({})
     }
-    console.log(filterQuery)
+
     let queryResults = async() => {
       let tempArr = []
       for(let i = 0; i < filterQuery.length; i++) {
@@ -245,6 +244,26 @@ function App() {
       </section>
   )
 
+  const [searchField, setSearchField ] = useState("")
+  const searchRef = useRef(null)
+
+  const handelSearch = (e) => {
+    setSearchField(e.target.value)
+    let temp = candidatesCopy.filter(candidate =>
+      candidate.firstname.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      candidate.lastname.toLowerCase().includes(e.target.value.toLowerCase())
+      )
+      
+      setCandidates(temp)
+      e.target.focus()
+  }
+
+  useEffect(() => {
+    if(searchField.length > 0) {
+      searchRef.current.focus()
+    }
+  },[searchField])
+
   return (
     <div className="App">
       {uid
@@ -258,7 +277,14 @@ function App() {
             <section className="candidates">
               <div className="d-flex">
                 <h2>Alle kandidater</h2>
-                {/* <Input placeholder="Søk" icon={search} className="search" id="search"/> */}
+                <div className="input-container search">
+                  <label htmlFor="search">
+                    <img src={search} alt="" />
+                  </label>
+                  <div className="search-container">
+                    <input ref={searchRef} id="search" name="search" type="text" placeholder="Søk" value={searchField} onChange={handelSearch}/>
+                  </div>
+                </div>
                 <Dropdown />
               </div>
               <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort} />

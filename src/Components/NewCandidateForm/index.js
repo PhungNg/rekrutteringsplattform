@@ -105,7 +105,6 @@ const NewCandidateForm = ({setFormStep, formStep, closeDialog }) => {
   useEffect(() => {
     if(formStep === 3) {
       addCandidate(formObject)
-      console.log(formObject)
     }
   },[formObject, formStep])
   
