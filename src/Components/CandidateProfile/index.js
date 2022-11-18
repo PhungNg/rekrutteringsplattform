@@ -92,14 +92,14 @@ const CandidateProfile = ({closeDialog, id}) => {
             
             const EditDeleteButtons = () => (
                 <>
-                    <Button text={"Rediger"} icon={edit} className="" onClick={()=>setEditInfo(!editInfo)}/>
-                    <Button text="Slett kandiddat" icon={bin} className="" onClick={()=> handleDeleteCandidate()}/>
+                    <Button text={"Rediger"} className="" onClick={()=>setEditInfo(!editInfo)}/>
+                    <Button text="Slett kandiddat" className="danger" onClick={()=> handleDeleteCandidate()}/>
                 </>
             )
             
             const SaveCancelButtons = () => (
                 <>
-                    {change && <Button text="Lagre endringer" onClick={() => handelSave()} />}
+                    {change && <Button text="Lagre endringer" className="pc-400" onClick={() => handelSave()} />}
                     <Button text="Avbryt" onClick={() => handelCancel()} />
                 </>
             )
@@ -198,10 +198,10 @@ const CandidateProfile = ({closeDialog, id}) => {
                     <form onSubmit={(e)=> handelSaveComments(e)}>
                         <div className="d-flex justify-content-between align-items-center">
                             <h3>Kommentar</h3>
-                            {!editComment && <Button icon={edit} text="Rediger" onClick={()=>setEditComment(true)}/>}
+                            {!editComment && <Button text="Rediger" onClick={()=>setEditComment(true)}/>}
                             {editComment && 
                                 <>
-                                    {commentsChanged && <Button type="submit" text="Lagre endring"/>}
+                                    {commentsChanged && <Button type="submit" text="Lagre endring" className="pc-400"/>}
                                     <Button text="Avbryt" onClick={()=>setEditComment(false)}/>
                                 </>
                             }
@@ -274,13 +274,13 @@ const CandidateProfile = ({closeDialog, id}) => {
     }
     
     const Dialogs = () => {
+        const getDialogs = useCallback(async() => {
+            let data = await getCandidate(id)
+            setDialogList(dialogList => dialogList = data.dialogs.sort((a,b) => new Date(b.date) - new Date(a.date)))
+        }, [])
         const formRef = useRef(null)
         const [ dialogList, setDialogList ] = useState([])
 
-        const getDialogs = useCallback(async() => {
-            let data = await getCandidate(id) // TODO: check again
-            setDialogList(dialogList => dialogList = data.dialogs.sort((a,b) => new Date(b.date) - new Date(a.date)))
-        }, [])
         
         const addNewDialog = (e) => {
             e.preventDefault()
@@ -288,6 +288,11 @@ const CandidateProfile = ({closeDialog, id}) => {
             let formObject = Object.fromEntries(data.entries())
 
             updateDocArray("dialogs", id, [formObject])
+            getDialogs()
+        }
+        
+        const deleteDialog = (dialog) => {
+            updateDocArray("dialogs", id, [dialog], true)
             getDialogs()
         }
 
@@ -313,7 +318,15 @@ const CandidateProfile = ({closeDialog, id}) => {
             <div className="conversation">
                 {dialogList && dialogList.map(({title, date, place, summary}, i) => {
                     return (
-                        <Accordion key={summary + i} title={title} date={date} place={place} summary={summary} />
+                        <Accordion
+                            key={summary + i}
+                            title={title}
+                            date={date}
+                            place={place}
+                            summary={summary}
+                            id={id}
+                            deleteDialog={deleteDialog}
+                            />
                     )
                 })}
                 <Accordion title="Legg til ny samtale" classname="add" form={<NewDialogForm />}/>

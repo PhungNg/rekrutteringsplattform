@@ -3,7 +3,7 @@ import classnames from "classnames";
 
 import './index.scss';
 
-const Button = ({text, amount, className, icon, onClick, form, iconBefore, type, children}) => {
+const Button = ({text, amount, disabled, className, icon, onClick, form, iconBefore, type, children}) => {
     const btnClasses = classnames(
         "btn",
         className ? className : null,
@@ -13,6 +13,7 @@ const Button = ({text, amount, className, icon, onClick, form, iconBefore, type,
         onClick: onClick || null,
         form: form || null,
         type: type || null,
+        disabled: disabled || null,
     }
 
     return (

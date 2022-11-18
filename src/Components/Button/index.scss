@@ -44,4 +44,9 @@
         color: #fff;
         border: 1px solid $primary-color-200;
     }
+
+    &.danger {
+        background-color: $error-color-1;
+        color: #ffffff;
+    }
 }
