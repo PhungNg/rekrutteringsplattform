@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 
 import { Button, Input } from '../index'
@@ -36,7 +36,7 @@ const Dropdown = ({checkboxList, handelOnChange, handelOpenClose, isOpen}) => {
             defaultValue={name}
             key={key}
             id={name}
-            label={name}
+            label={name !== "" ? name : "TBD"}
             checked={checked}
             onChange={handelOnChange}/>
         ))}

@@ -4,7 +4,6 @@ import {
   CandidateProfile ,
   Dialog as DialogComp,
   Dropdown as DropdownComp,
-  Input,
   NewCandidateForm,
   Table
 } from './Components/';
