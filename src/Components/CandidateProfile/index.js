@@ -275,7 +275,9 @@ const CandidateProfile = ({closeDialog, id}) => {
     const Dialogs = () => {
         const getDialogs = useCallback(async() => {
             let data = await getCandidate(id)
-            setDialogList(dialogList => dialogList = data.dialogs.sort((a,b) => new Date(b.date) - new Date(a.date)))
+            data.dialogs
+                ? setDialogList(dialogList => dialogList = data.dialogs.sort((a,b) => new Date(b.date) - new Date(a.date)))
+                : setDialogList([])
         }, [])
         const formRef = useRef(null)
         const [ dialogList, setDialogList ] = useState([])
