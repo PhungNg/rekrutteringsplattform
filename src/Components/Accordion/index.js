@@ -76,7 +76,7 @@ const Accordion = ({ classname, title, date, place, summary, form, id, deleteDia
                             </div>
                             <Input required textarea id="summary" label="Sammendrag" defaultValue={currentData.summary} rows={4} onChange={handelOnChange}/>
                             <div className="d-flex">
-                                {inputChanged && <Button type="submit" className="pc-400" text="Lagre"/>}
+                                {inputChanged && <Button type="submit" className="primary" text="Lagre"/>}
                                 <Button type="button" text="Avbryt" className={"btn"} onClick={() => setEditOn(false)}/>
                                 <Button type="button" text="Slett samtale" className={"btn danger"} onClick={() => deleteDialog(currentData)}/>
                             </div>

@@ -11,6 +11,15 @@
         img {
             margin-left: auto;
         }
+
+        &:hover {
+          background-color: $grayscale-color-50;
+          color: #000000;
+        }
+
+        &:active {
+          background-color: inherit;
+        }
     }
   
     .header {

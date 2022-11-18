@@ -121,7 +121,7 @@ const NewCandidateForm = ({setFormStep, formStep, closeDialog }) => {
           {formStep === 2 &&
             <Button onClick={()=> handlePrevClick()} text="Forrige" />
           }
-          <Button className="pc-400" form="new-candidate" onClick={(e) => formHandler(e)} text={btnText}/>
+          <Button className="primary" form="new-candidate" onClick={(e) => formHandler(e)} text={btnText}/>
         </div>
       </form>
   )

@@ -13,6 +13,18 @@
     font-weight: bold;
     cursor: pointer;
     
+    &:hover {
+        // background-color: $grayscale-color-200;
+        background-color: black;
+        color: white;
+        border-color: black;
+    }
+
+    &:active {
+        background-color: transparent;
+        border: 1px solid black;
+    }
+
     span,
     .icon {
         margin-left: 0.5rem;
@@ -39,14 +51,29 @@
         }
     }
 
-    &.pc-400 {
+    &.primary {
         background-color: $primary-color-400;
         color: #fff;
         border: 1px solid $primary-color-200;
+
+        &:hover {
+            background-color: $primary-color-200;
+        }
+
+        &:active {
+            background-color: $primary-color-400;
+            border: 1px solid black;
+        }
     }
 
     &.danger {
         background-color: $error-color-1;
         color: #ffffff;
+
+        &:hover {
+            background-color: #ffffff;
+            color: $error-color-1;
+            border-color: $error-color-1;
+        }
     }
 }

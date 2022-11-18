@@ -99,7 +99,7 @@ const CandidateProfile = ({closeDialog, id}) => {
             
             const SaveCancelButtons = () => (
                 <>
-                    {change && <Button text="Lagre endringer" className="pc-400" onClick={() => handelSave()} />}
+                    {change && <Button text="Lagre endringer" className="primary" onClick={() => handelSave()} />}
                     <Button text="Avbryt" onClick={() => handelCancel()} />
                 </>
             )
@@ -201,7 +201,7 @@ const CandidateProfile = ({closeDialog, id}) => {
                             {!editComment && <Button text="Rediger" onClick={()=>setEditComment(true)}/>}
                             {editComment && 
                                 <>
-                                    {commentsChanged && <Button type="submit" text="Lagre endring" className="pc-400"/>}
+                                    {commentsChanged && <Button type="submit" text="Lagre endring" className="primary"/>}
                                     <Button text="Avbryt" onClick={()=>setEditComment(false)}/>
                                 </>
                             }
@@ -267,7 +267,7 @@ const CandidateProfile = ({closeDialog, id}) => {
                 <DocumentsList />
                 <form id="add-file" ref={formRef}>
                     <Input type="file" id="add-file" label="Legg til dokument" />
-                    <Button text="Legg til dokument" className="pc-400" onClick={(e) => handleSaveFile(e)}/>
+                    <Button text="Legg til dokument" className="primary" onClick={(e) => handleSaveFile(e)}/>
                 </form>
             </div>
         )
@@ -305,7 +305,7 @@ const CandidateProfile = ({closeDialog, id}) => {
                         <Input id="place" label="Sted" required />
                     </div>
                     <Input required textarea id="summary" label="Sammendrag" placeholder="Enter a description" rows={4}/>
-                    <Button type="submit" className="pc-400" text="Lagre"/>
+                    <Button type="submit" className="primary" text="Lagre"/>
                 </fieldset>
             </form>
         )
@@ -315,7 +315,7 @@ const CandidateProfile = ({closeDialog, id}) => {
         },[getDialogs])
 
         return (
-            <div className="conversation">
+            <div className="dialogs">
                 {dialogList && dialogList.map(({title, date, place, summary}, i) => {
                     return (
                         <Accordion

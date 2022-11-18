@@ -106,7 +106,7 @@ function App() {
               buttons.map((value, i) => (
                 <Button key={field+i}
                 text={value}
-                className={(currentDepartmentSelected === value || currentStatusSelected === value) && "pc-400"}
+                className={(currentDepartmentSelected === value || currentStatusSelected === value) && "primary"}
                 onClick={()=>handelFilter(key, value)}/>
               ))
             ))}
@@ -241,7 +241,7 @@ function App() {
   const SignIn = () => (
       <section id="sign-in">
         <h1>Rekrutteringsplattform</h1>
-        <Button text="Logg inn" className="pc-400" onClick={signIn}/>
+        <Button text="Logg inn" className="primary" onClick={signIn}/>
       </section>
   )
 
@@ -251,7 +251,7 @@ function App() {
         ? <>
           <header>
             <h1>Kandidater</h1>
-            <Button text="Legg til ny kandidat" icon={plus} className={"pc-400"} onClick={() => handelOpenDialog("form")}/>
+            <Button text="Legg til ny kandidat" icon={plus} className={"primary"} onClick={() => handelOpenDialog("form")}/>
           </header>
            <main>
             <FilterButtons />
@@ -264,7 +264,9 @@ function App() {
               <Table candidates={candidates} onClick={handelOpenDialog} handelSort={handelSort} />
             </section>
             <Dialog />
-            <button onClick={handelSignOut}>Logout</button>
+            <div className="d-flex justify-content-center">
+              <Button text="Logg ut" onClick={handelSignOut} />
+            </div>
           </main>
         </>
         : <SignIn />

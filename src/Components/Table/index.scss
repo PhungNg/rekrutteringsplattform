@@ -25,6 +25,10 @@
             border-left: 0;
             cursor: pointer;
 
+            &:hover {
+                opacity: 0.7;
+            }
+        
             td {
                 > div {
                     padding: 10px 1rem;
