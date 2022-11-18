@@ -14,14 +14,14 @@
     cursor: pointer;
     
     &:hover {
-        // background-color: $grayscale-color-200;
-        background-color: black;
+        background-color: $grayscale-color-600;
         color: white;
-        border-color: black;
+        border-color:transparent;
     }
 
     &:active {
         background-color: transparent;
+        color: #000000;
         border: 1px solid black;
     }
 
@@ -55,9 +55,9 @@
         background-color: $primary-color-400;
         color: #fff;
         border: 1px solid $primary-color-200;
-
+        
         &:hover {
-            background-color: $primary-color-200;
+            background-color: $primary-color-core;
         }
 
         &:active {
